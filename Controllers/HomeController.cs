@@ -20,6 +20,18 @@ namespace MeetGreet.Controllers
             return View();
         }
 
+        public ActionResult create(FormCollection collection)
+        {
+            try
+            {
+
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
         public ActionResult Contact()
         {
             ViewBag.Message = "Your contact page.";
