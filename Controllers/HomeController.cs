@@ -1,30 +1,64 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using MeetGreet2.Models;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.Diagnostics;
+using System.Net;
 
-namespace MeetGreet.Controllers
+namespace MeetGreet2.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly ILogger<HomeController> _logger;
+
+        public HomeController(ILogger<HomeController> logger)
+        {
+            _logger = logger;
+        }
+
         public ActionResult Index()
         {
+            WebClient client = new WebClient();
+
+            // Below is the url for querying for a specific location.
+            // "https://overpass-api.de/api/interpreter?data=[out:json];area[name=%22Beatty Hall%22];out%20center%20;"
+
+            // Query for information on a city. NOTE: DIFFERENT THAN QUERYING FOR INFO ON A SPECIFIC LOCATION
+            // Specific location has a "center" key where the lat and lon are stored, city queries DO NOT have "center" key.
+            byte[] raw = client.DownloadData("https://overpass-api.de/api/interpreter?data=[out:json];area[name=%22Boston%22];(node[place=%22city%22](area););out%20center%20;");
+            string webData = System.Text.Encoding.UTF8.GetString(raw);
+
+            // Converts Json string into "Addresses" class. All data is filled out in the right location.
+            var myResult = JsonConvert.DeserializeObject<Addresses>(webData);
+
+            foreach (var address in myResult.elements)
+            {
+                if (address.center != null)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Lat, Lon: {address.center.lat}, {address.center.lon}");
+                }
+                System.Diagnostics.Debug.WriteLine($"Name: {address.tags.name}\n\n");
+            }
+
+            ViewData["Addresses"] = myResult;
+
+            // Retrieves all data on all addresses with "Beatty Hall" as name.
+            raw = client.DownloadData("https://overpass-api.de/api/interpreter?data=[out:json];area[name=%22Beatty Hall%22];out%20center%20;");
+            webData = System.Text.Encoding.UTF8.GetString(raw);
+            var beattyHalls = JsonConvert.DeserializeObject<Addresses>(webData);
+            ViewData["BeattyHalls"] = beattyHalls;
+
             return View();
         }
 
-        public ActionResult About()
+        public IActionResult Privacy()
         {
-            ViewBag.Message = "Your application description page.";
-
             return View();
         }
 
-        public ActionResult Contact()
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
         {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }
