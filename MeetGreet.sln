@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31729.503
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeetGreet", "MeetGreet.csproj", "{A100E27E-0268-409F-BFBE-5ECA32C724A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MeetGreet", "MeetGreet.csproj", "{5EA4ACB8-CFA2-4ADD-B0F2-7A1E788DF7DB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A100E27E-0268-409F-BFBE-5ECA32C724A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A100E27E-0268-409F-BFBE-5ECA32C724A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A100E27E-0268-409F-BFBE-5ECA32C724A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A100E27E-0268-409F-BFBE-5ECA32C724A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EA4ACB8-CFA2-4ADD-B0F2-7A1E788DF7DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EA4ACB8-CFA2-4ADD-B0F2-7A1E788DF7DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EA4ACB8-CFA2-4ADD-B0F2-7A1E788DF7DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EA4ACB8-CFA2-4ADD-B0F2-7A1E788DF7DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {9866E2D1-84CC-4DA8-8BDB-AEB79CE0313E}
+		SolutionGuid = {B16FEB27-5D0A-4182-963D-A6C7634EFB5E}
 	EndGlobalSection
 EndGlobal
