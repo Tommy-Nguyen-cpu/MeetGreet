@@ -1,8 +1,8 @@
-﻿@model MeetGreet2.Models.Addresses
+﻿@model MeetGreet.Models.Addresses
 @{
     ViewBag.Title = "Home Page";
-    var data = ViewData["Addresses"] as MeetGreet2.Models.Addresses;
-    var beattyHalls = ViewData["BeattyHalls"] as MeetGreet2.Models.Addresses;
+    var data = ViewData["Addresses"] as MeetGreet.Models.Addresses;
+    var beattyHalls = ViewData["BeattyHalls"] as MeetGreet.Models.Addresses;
 }
 <style>
     #map {
@@ -15,55 +15,57 @@
     <h1>Your browser does not support JavaScript. Please switch to a different browser or turn JavaScript on.</h1>
 </noscript>
 
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
-      integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
-      crossorigin="" />
-<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
-        integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
-        crossorigin="">
-</script>
+<body>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+          integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
+          crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+            integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
+            crossorigin="">
+    </script>
 
-<div class="row">
-    <div id="map">
-        <style>
-            img.huechange {
-                filter: hue-rotate(120deg);
-            }
-        </style>
-        <script type="text/javascript">
-            // TODO: The location should be set to the current location of the user.
-            // It is currently set to be whatever the first address is in the list of "addresses" passed to view.
+    <div class="row">
+        <div id="map">
+            <style>
+                img.huechange {
+                    filter: hue-rotate(120deg);
+                }
+            </style>
+            <script type="text/javascript">
+                // TODO: The location should be set to the current location of the user.
+                // It is currently set to be whatever the first address is in the list of "addresses" passed to view.
                 var map = L.map('map').setView([@data.elements[0].lat, @data.elements[0].lon], 13);
 
                 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 }).addTo(map);
 
-            getLocation();
-            function getLocation() {
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(showPosition);
-                } else {
+                getLocation();
+                function getLocation() {
+                    if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(showPosition);
+                    } else {
 
+                    }
                 }
-            }
 
-            function showPosition(position) {
+                function showPosition(position) {
 
-                L.marker([position.coords.latitude, position.coords.longitude]).addTo(map)
-                .bindPopup('YOUR LOCATION.')
-                .openPopup();
-            }
+                    L.marker([position.coords.latitude, position.coords.longitude]).addTo(map)
+                        .bindPopup('YOUR LOCATION.')
+                        .openPopup();
+                }
 
-            @foreach (var address in beattyHalls.elements)
-            {
-                @:var marker = L.marker([@address.center.lat, @address.center.lon], { html: "<span style='background-color:#00FF00'>" }).addTo(map).bindPopup('This marker should be locations of events.').openPopup();
-                @:marker._icon.classList.add("huechange");
-            }
-        </script>
+                @foreach (var address in beattyHalls.elements)
+                {
+                    @:var marker = L.marker([@address.center.lat, @address.center.lon], { html: "<span style='background-color:#00FF00'>" }).addTo(map).bindPopup('This marker should be locations of events.').openPopup();
+                    @:marker._icon.classList.add("huechange");
+                }
+            </script>
 
+        </div>
     </div>
-</div>
-<div class="row">
-    <textarea>This is where we'll have the feed.</textarea>
-</div>
+    <div class="row">
+        <textarea>This is where we'll have the feed.</textarea>
+    </div>
+</body>

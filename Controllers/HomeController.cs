@@ -1,10 +1,10 @@
-﻿using MeetGreet2.Models;
+﻿using MeetGreet.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Net;
 
-namespace MeetGreet2.Controllers
+namespace MeetGreet.Controllers
 {
     public class HomeController : Controller
     {
