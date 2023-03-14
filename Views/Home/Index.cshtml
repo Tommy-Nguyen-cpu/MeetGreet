@@ -1,31 +1,69 @@
-﻿@{
+﻿@model MeetGreet2.Models.Addresses
+@{
     ViewBag.Title = "Home Page";
+    var data = ViewData["Addresses"] as MeetGreet2.Models.Addresses;
+    var beattyHalls = ViewData["BeattyHalls"] as MeetGreet2.Models.Addresses;
 }
+<style>
+    #map {
+        height: 300px;
+    }
+</style>
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
-</div>
+<!-- "noscript" tag will be displayed if JavaScript is not supported or turned off in a browser. -->
+<noscript>
+    <h1>Your browser does not support JavaScript. Please switch to a different browser or turn JavaScript on.</h1>
+</noscript>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+      integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
+      crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+        integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
+        crossorigin="">
+</script>
 
 <div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+    <div id="map">
+        <style>
+            img.huechange {
+                filter: hue-rotate(120deg);
+            }
+        </style>
+        <script type="text/javascript">
+            // TODO: The location should be set to the current location of the user.
+            // It is currently set to be whatever the first address is in the list of "addresses" passed to view.
+                var map = L.map('map').setView([@data.elements[0].lat, @data.elements[0].lon], 13);
+
+                L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                }).addTo(map);
+
+            getLocation();
+            function getLocation() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(showPosition);
+                } else {
+
+                }
+            }
+
+            function showPosition(position) {
+
+                L.marker([position.coords.latitude, position.coords.longitude]).addTo(map)
+                .bindPopup('YOUR LOCATION.')
+                .openPopup();
+            }
+
+            @foreach (var address in beattyHalls.elements)
+            {
+                @:var marker = L.marker([@address.center.lat, @address.center.lon], { html: "<span style='background-color:#00FF00'>" }).addTo(map).bindPopup('This marker should be locations of events.').openPopup();
+                @:marker._icon.classList.add("huechange");
+            }
+        </script>
+
     </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-    </div>
+</div>
+<div class="row">
+    <textarea>This is where we'll have the feed.</textarea>
 </div>
