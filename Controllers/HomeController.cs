@@ -25,6 +25,8 @@ namespace MeetGreet.Controllers
             // Query for information on a city. NOTE: DIFFERENT THAN QUERYING FOR INFO ON A SPECIFIC LOCATION
             // Specific location has a "center" key where the lat and lon are stored, city queries DO NOT have "center" key.
             HttpResponseMessage response = await client.GetAsync("https://overpass-api.de/api/interpreter?data=[out:json];area[name=%22Boston%22];(node[place=%22city%22](area););out%20center%20;");
+            
+            // TODO: Sometimes this throws an exception. Fix it so that it never throws an exception.
             var myResult = await response.Content.ReadFromJsonAsync<Addresses>();
 /*            byte[] raw = client.DownloadData("https://overpass-api.de/api/interpreter?data=[out:json];area[name=%22Boston%22];(node[place=%22city%22](area););out%20center%20;");
             string webData = System.Text.Encoding.UTF8.GetString(raw);

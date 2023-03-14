@@ -32,13 +32,6 @@
                 }
             </style>
             <script type="text/javascript">
-                // TODO: The location should be set to the current location of the user.
-                // It is currently set to be whatever the first address is in the list of "addresses" passed to view.
-                var map = L.map('map').setView([@data.elements[0].lat, @data.elements[0].lon], 13);
-
-                L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                }).addTo(map);
 
                 getLocation();
                 function getLocation() {
@@ -49,17 +42,39 @@
                     }
                 }
 
+                var UserIcon = L.Icon.extend({
+                   options: {
+                        iconUrl: '/MapImages/UserIconImage.png',
+                        shadowUrl: 'http://leafletjs.com/examples/custom-icons/leaf-shadow.png',
+                        iconSize: new L.Point(60, 40),
+                        opacity: 0.5,
+                        shadowSize: new L.Point(0, 0),
+                        iconAnchor: new L.Point(16, 16),
+                        popupAnchor: new L.Point(0, -18)
+                      }
+                    });
+
                 function showPosition(position) {
 
-                    L.marker([position.coords.latitude, position.coords.longitude]).addTo(map)
+                    // TODO: The location should be set to the current location of the user.
+                    // It is currently set to be whatever the first address is in the list of "addresses" passed to view.
+                    var map = L.map('map').setView([position.coords.latitude, position.coords.longitude], 13);
+
+                    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    }).addTo(map);
+
+                    L.marker([position.coords.latitude, position.coords.longitude], { icon: new UserIcon() }).addTo(map)
                         .bindPopup('YOUR LOCATION.')
                         .openPopup();
-                }
 
-                @foreach (var address in beattyHalls.elements)
-                {
-                    @:var marker = L.marker([@address.center.lat, @address.center.lon], { html: "<span style='background-color:#00FF00'>" }).addTo(map).bindPopup('This marker should be locations of events.').openPopup();
-                    @:marker._icon.classList.add("huechange");
+
+                    @foreach (var address in beattyHalls.elements)
+                    {
+                        @:var marker = L.marker([@address.center.lat, @address.center.lon], { html: "<span style='background-color:#00FF00'>" }).addTo(map).bindPopup('This marker should be locations of events.').openPopup();
+                        @:marker._icon.classList.add("huechange");
+                    }
+                    map.setView([position.coords.latitude, position.coords.longitude], 13);
                 }
             </script>
 
