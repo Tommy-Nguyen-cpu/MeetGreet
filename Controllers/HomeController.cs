@@ -3,6 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Net;
+using RestSharp;
+using MimeKit.Text;
+using MimeKit;
+using MailKit.Security;
+using MailKit.Net.Smtp;
 
 namespace MeetGreet2.Controllers
 {
@@ -52,6 +57,30 @@ namespace MeetGreet2.Controllers
 
         public IActionResult Privacy()
         {
+            /* var client = new RestClient("https://api.apilayer.com/email_verification/");
+            client.Timeout = -1; 
+
+            var request = new RestRequest("check?email=hoytb@wit.edu", Method.Get);
+            request.AddHeader("apikey", "tjl97TlETSE4m1uM9CtGeEkzCklBdbrE");
+
+            var response = client.Execute(request);
+            Console.WriteLine(response.Content); */
+
+            // Just put it there for now so that I can have successfull code looking into email verification
+            // process now to try and figure out login
+
+            /* var email = new MimeMessage();
+            email.From.Add(MailboxAddress.Parse("MeetGreetWIT@outlook.com"));
+            email.To.Add(MailboxAddress.Parse("brianhoyt23@gmail.com"));
+            email.Subject = "Test Email Subject";
+            email.Body = new TextPart(TextFormat.Html) { Text = "<h1>Example HTML Message Body</h1>" };
+
+            using var smtp = new SmtpClient();
+            smtp.Connect("smtp.office365.com", 587, SecureSocketOptions.StartTls);
+            smtp.Authenticate("MeetGreetWIT@outlook.com", "SoftwareFinal2023!");
+            smtp.Send(email);
+            smtp.Disconnect(true); */
+
             return View();
         }
 
