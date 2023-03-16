@@ -1,4 +1,4 @@
-﻿@model MeetGreet2.Models.UserInfo
+﻿@model MeetGreet.Models.UserInfo
 <style>
     #WebsiteName{
         color: mediumseagreen;
@@ -7,7 +7,7 @@
     }
 
     body{
-        background-image: url("../../BackgroundImages/loginBackground2.jpg");
+        background-image: url("images/loginBackground2.jpg");
         height: 100%;
         width: 100%;
     }
@@ -51,18 +51,24 @@
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             @Html.LabelFor(info => info.Email)
             <br />
-            @Html.TextBoxFor(info => info.Email)
+            @Html.TextBoxFor(info => info.Email, "Email")
             <br />
             @Html.ValidationMessageFor(info => info.Email, "", new { @class = "text-danger" })
+            <br />
+            @Html.LabelFor(info => info.HashedPassword, "Password")
+            <br />
+            @Html.TextBoxFor(info => info.HashedPassword)
+            <br />
+            @Html.ValidationMessageFor(info => info.HashedPassword, "", new { @class = "text-danger" })
             }
-            <label for="email"><b>Email:</b></label><br />
+@*            <label for="email"><b>Email:</b></label><br />
             <input name="email" type="text" placeholder="Enter email" required />
 
             <br />
             <br />
 
             <label for="password"><b>Password:</b></label><br />
-            <input name="password" type="text" placeholder="Enter password" required />
+            <input name="password" type="text" placeholder="Enter password" required />*@
             <br />
             <label><a href="#"><b style="font-size:9px;">Trouble logging in?</b></a></label>
 

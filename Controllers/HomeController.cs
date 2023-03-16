@@ -1,4 +1,4 @@
-﻿using MeetGreet2.Models;
+﻿using MeetGreet.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Diagnostics;
@@ -9,7 +9,7 @@ using MimeKit;
 using MailKit.Security;
 using MailKit.Net.Smtp;
 
-namespace MeetGreet2.Controllers
+namespace MeetGreet.Controllers
 {
     public class HomeController : Controller
     {
@@ -20,20 +20,24 @@ namespace MeetGreet2.Controllers
             _logger = logger;
         }
 
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            WebClient client = new WebClient();
+            HttpClient client = new HttpClient();
 
             // Below is the url for querying for a specific location.
             // "https://overpass-api.de/api/interpreter?data=[out:json];area[name=%22Beatty Hall%22];out%20center%20;"
 
             // Query for information on a city. NOTE: DIFFERENT THAN QUERYING FOR INFO ON A SPECIFIC LOCATION
             // Specific location has a "center" key where the lat and lon are stored, city queries DO NOT have "center" key.
-            byte[] raw = client.DownloadData("https://overpass-api.de/api/interpreter?data=[out:json];area[name=%22Boston%22];(node[place=%22city%22](area););out%20center%20;");
+            HttpResponseMessage response = await client.GetAsync("https://overpass-api.de/api/interpreter?data=[out:json];area[name=%22Boston%22];(node[place=%22city%22](area););out%20center%20;");
+            
+            // TODO: Sometimes this throws an exception. Fix it so that it never throws an exception.
+            var myResult = await response.Content.ReadFromJsonAsync<Addresses>();
+/*            byte[] raw = client.DownloadData("https://overpass-api.de/api/interpreter?data=[out:json];area[name=%22Boston%22];(node[place=%22city%22](area););out%20center%20;");
             string webData = System.Text.Encoding.UTF8.GetString(raw);
 
             // Converts Json string into "Addresses" class. All data is filled out in the right location.
-            var myResult = JsonConvert.DeserializeObject<Addresses>(webData);
+            var myResult = JsonConvert.DeserializeObject<Addresses>(webData);*/
 
             foreach (var address in myResult.elements)
             {
@@ -47,9 +51,8 @@ namespace MeetGreet2.Controllers
             ViewData["Addresses"] = myResult;
 
             // Retrieves all data on all addresses with "Beatty Hall" as name.
-            raw = client.DownloadData("https://overpass-api.de/api/interpreter?data=[out:json];area[name=%22Beatty Hall%22];out%20center%20;");
-            webData = System.Text.Encoding.UTF8.GetString(raw);
-            var beattyHalls = JsonConvert.DeserializeObject<Addresses>(webData);
+            response = await client.GetAsync("https://overpass-api.de/api/interpreter?data=[out:json];area[name=%22Beatty Hall%22];out%20center%20;");
+            var beattyHalls = await response.Content.ReadFromJsonAsync<Addresses>();
             ViewData["BeattyHalls"] = beattyHalls;
 
             return View();
