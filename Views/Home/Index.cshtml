@@ -13,6 +13,10 @@
     #map {
         height: 300px;
     }
+    
+    .card, cards-wrapper, card-body {
+        background-color: darkgray;
+    }
     .carousel-inner.myInner {
         border-top: 5px;
         border-left: 5px;
@@ -22,10 +26,6 @@
         background-color: darkgrey;
         border-style: solid
     }
-
-    .carousel.slide.myslide{
-    
-    }
 </style>
 
 <!-- "noscript" tag will be displayed if JavaScript is not supported or turned off in a browser. -->
@@ -33,6 +33,7 @@
     <h1>Your browser does not support JavaScript. Please switch to a different browser or turn JavaScript on.</h1>
 </noscript>
 
+<body>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
           integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
           crossorigin="" />
@@ -105,16 +106,12 @@
 
         </div>
     </div>
-    <div class="row">
-        <textarea>This is where we'll have the feed.</textarea>
-    </div>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 <div class="row">
     <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
-        <div class="carousel-indicators">
 
             <div class="carousel-inner myInner">
                 @{
@@ -134,7 +131,7 @@
                                     {
                                         <div class="col">
                                             <div class="cards-wrapper">
-                                                <div class="card">
+                                                <div class="card" style="background-color:gray">
                                                     <img src="..." class="card-img-top" alt="...">
                                                     <div class="card-body">
                                                         <h5 class="card-title">Event Name:@array[j]</h5>
@@ -162,4 +159,4 @@
             </div>
         </div>
     </div>
-</div>
+</body>
