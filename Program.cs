@@ -1,4 +1,4 @@
-using MeetGreet2.Data;
+using MeetGreet.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 

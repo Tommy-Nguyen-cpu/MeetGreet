@@ -1,4 +1,4 @@
-﻿using MeetGreet2.Models;
+﻿using MeetGreet.Models;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.Web;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 
-namespace MeetGreet2.Controllers
+namespace MeetGreet.Controllers
 {
     public class AccountController : Controller
     {
@@ -45,7 +45,7 @@ namespace MeetGreet2.Controllers
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
         // GET: Login
-        public async Task<ActionResult> Authentication(MeetGreet2.Models.UserInfo loginCredentials, string returnURL)
+        public async Task<ActionResult> Authentication(UserInfo loginCredentials, string returnURL)
         {
             
             var result = await signInManager.PasswordSignInAsync(loginCredentials.UserName, loginCredentials.HashedPassword, true, true);

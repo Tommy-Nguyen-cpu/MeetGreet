@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace MeetGreet2.Data
+namespace MeetGreet.Data
 {
     public class ApplicationDbContext : IdentityDbContext
     {

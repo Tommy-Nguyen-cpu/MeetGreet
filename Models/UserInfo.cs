@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace MeetGreet2.Models
+namespace MeetGreet.Models
 {
     public class UserInfo
     {

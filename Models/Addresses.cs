@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace MeetGreet2.Models
+namespace MeetGreet.Models
 {
     public class Addresses
     {

@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 
-namespace MeetGreet2.Data.Migrations
+namespace MeetGreet.Data.Migrations
 {
     public partial class CreateIdentitySchema : Migration
     {
