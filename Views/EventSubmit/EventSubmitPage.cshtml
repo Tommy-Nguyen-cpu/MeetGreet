@@ -1,0 +1,62 @@
+﻿@model MeetGreet.Models.Addresses
+@{
+    ViewBag.Title = "Event Creation";
+    var data = ViewData["Addresses"] as MeetGreet.Models.Addresses;
+    var beattyHalls = ViewData["BeattyHalls"] as MeetGreet.Models.Addresses;
+}
+
+<style>
+    #map {
+        height: 300px;
+    }
+</style>
+
+<!-- "noscript" tag will be displayed if JavaScript is not supported or turned off in a browser. -->
+<noscript>
+    <h1>Your browser does not support JavaScript. Please switch to a different browser or turn JavaScript on.</h1>
+</noscript>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+      integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
+      crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+        integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
+        crossorigin="">
+</script>
+
+<div class="row">
+    <div id="map">
+        <style>
+            img.huechange {
+                filter: hue-rotate(120deg);
+            }
+        </style>
+        <script type="text/javascript">
+            // TODO: The location should be set to the current location of the user.
+            // It is currently set to be whatever the first address is in the list of "addresses" passed to view.
+            // Put in any random longitude and latitude to allow this to work
+            var map = L.map('map').setView([1, 1], 13);
+
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            getLocation();
+            function getLocation() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(showPosition);
+                } else {
+
+                }
+            }
+
+            function showPosition(position) {
+
+                L.marker([position.coords.latitude, position.coords.longitude]).addTo(map)
+                    .bindPopup('YOUR LOCATION.')
+                    .openPopup();
+            }
+        </script>
+
+    </div>
+</div>
