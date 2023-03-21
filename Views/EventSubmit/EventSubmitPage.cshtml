@@ -1,9 +1,22 @@
-﻿@model MeetGreet.Models.Addresses
+﻿@using MeetGreet.Models
 @{
-    ViewBag.Title = "Event Creation";
+    ViewBag.Title = "EventSubmitPage";
     var data = ViewData["Addresses"] as MeetGreet.Models.Addresses;
+    var userEventData = ViewData["Event"] as MeetGreet.Models.Event;
     var beattyHalls = ViewData["BeattyHalls"] as MeetGreet.Models.Addresses;
 }
+
+
+<h3>@userEventData.eventName</h3>
+<br />
+<h3>@userEventData.description</h3>
+<br />
+<h3>@userEventData.address</h3>
+<br />
+<h3>@userEventData.city</h3>
+<br />
+<h3>@userEventData.zipcode</h3>
+<br />
 
 <style>
     #map {
