@@ -4,7 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>aspnet-MeetGreet2-5125ce01-fdec-478a-b9e4-d08b38e1fd01</UserSecretsId>
+    <UserSecretsId>aspnet-MeetGreet-5125ce01-fdec-478a-b9e4-d08b38e1fd01</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,7 +27,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.12" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.13" />
+    <PackageReference Include="MySqlConnector" Version="2.2.5" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
