@@ -1,13 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MeetGreet;
 
 public partial class User : IdentityUser
 {
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public override string Id { get; set; }
 
     public override string? UserName { get; set; }
@@ -39,4 +37,8 @@ public partial class User : IdentityUser
     public override int AccessFailedCount { get; set; }
 
     public virtual ICollection<Userclaim> Userclaims { get; } = new List<Userclaim>();
+
+    public virtual ICollection<Userlogin> Userlogins { get; } = new List<Userlogin>();
+
+    public virtual ICollection<Usertoken> Usertokens { get; } = new List<Usertoken>();
 }

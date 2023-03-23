@@ -4,15 +4,15 @@ using System.Collections.Generic;
 
 namespace MeetGreet;
 
-public partial class Userclaim : IdentityUserClaim<string>
+public partial class Usertoken : IdentityUserToken<string>
 {
-    public override int Id { get; set; }
-
     public override string UserId { get; set; } = null!;
 
-    public override string? ClaimType { get; set; }
+    public override string LoginProvider { get; set; } = null!;
 
-    public override string? ClaimValue { get; set; }
+    public override string Name { get; set; } = null!;
+
+    public override string? Value { get; set; }
 
     public virtual User User { get; set; } = null!;
 }

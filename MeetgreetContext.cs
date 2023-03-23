@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace MeetGreet;
 
-public partial class MeetgreetContext : DbContext
+public partial class MeetgreetContext : IdentityUserContext<User, string, Userclaim, Userlogin, Usertoken>
 {
     public MeetgreetContext()
     {
@@ -21,9 +22,13 @@ public partial class MeetgreetContext : DbContext
 
     public virtual DbSet<Userclaim> Userclaims { get; set; }
 
-    // TODO: CHANGE PASSWORD HERE TOO.
+    public virtual DbSet<Userlogin> Userlogins { get; set; }
+
+    public virtual DbSet<Usertoken> Usertokens { get; set; }
+
+    // TODO: When we switch over to AWS, change this to the AWS connection string.
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseMySql("server=localhost;user=root;database=MEETGREET;password={CHANGE THIS PASSWORD}", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.31-mysql"));
+        => optionsBuilder.UseMySql("server=localhost;user=root;database=MEETGREET;password={REPLACE WITH YOUR PASSWORD}", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.31-mysql"));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -115,6 +120,68 @@ public partial class MeetgreetContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.Userclaims)
                 .HasForeignKey(d => d.UserId)
                 .HasConstraintName("FK_UserClaims_Users_UserId");
+        });
+
+        modelBuilder.Entity<Userlogin>(entity =>
+        {
+            entity.HasKey(e => new { e.LoginProvider, e.ProviderKey })
+                .HasName("PRIMARY")
+                .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
+
+            entity.ToTable("userlogins");
+
+            entity.HasIndex(e => e.UserId, "FK_UserLogins_Users_UserId");
+
+            entity.Property(e => e.LoginProvider)
+                .HasMaxLength(128)
+                .UseCollation("utf8mb3_general_ci")
+                .HasCharSet("utf8mb3");
+            entity.Property(e => e.ProviderKey)
+                .HasMaxLength(128)
+                .UseCollation("utf8mb3_general_ci")
+                .HasCharSet("utf8mb3");
+            entity.Property(e => e.ProviderDisplayName)
+                .HasMaxLength(255)
+                .UseCollation("utf8mb3_general_ci")
+                .HasCharSet("utf8mb3");
+            entity.Property(e => e.UserId)
+                .HasMaxLength(450)
+                .UseCollation("utf8mb3_general_ci")
+                .HasCharSet("utf8mb3");
+
+            entity.HasOne(d => d.User).WithMany(p => p.Userlogins)
+                .HasForeignKey(d => d.UserId)
+                .HasConstraintName("FK_UserLogins_Users_UserId");
+        });
+
+        modelBuilder.Entity<Usertoken>(entity =>
+        {
+            entity.HasKey(e => new { e.UserId, e.LoginProvider, e.Name })
+                .HasName("PRIMARY")
+                .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0, 0 });
+
+            entity.ToTable("usertokens");
+
+            entity.Property(e => e.UserId)
+                .HasMaxLength(450)
+                .UseCollation("utf8mb3_general_ci")
+                .HasCharSet("utf8mb3");
+            entity.Property(e => e.LoginProvider)
+                .HasMaxLength(128)
+                .UseCollation("utf8mb3_general_ci")
+                .HasCharSet("utf8mb3");
+            entity.Property(e => e.Name)
+                .HasMaxLength(128)
+                .UseCollation("utf8mb3_general_ci")
+                .HasCharSet("utf8mb3");
+            entity.Property(e => e.Value)
+                .HasMaxLength(255)
+                .UseCollation("utf8mb3_general_ci")
+                .HasCharSet("utf8mb3");
+
+            entity.HasOne(d => d.User).WithMany(p => p.Usertokens)
+                .HasForeignKey(d => d.UserId)
+                .HasConstraintName("FK_UserTokens_User_UserId");
         });
 
         OnModelCreatingPartial(modelBuilder);
