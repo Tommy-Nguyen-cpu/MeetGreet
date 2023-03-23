@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
+using MeetGreet.Models;
 
 namespace MeetGreet.Areas.Identity.Pages.Account
 {
@@ -114,7 +115,7 @@ namespace MeetGreet.Areas.Identity.Pages.Account
                 Debug.WriteLine("Valid State!");
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(Input, Input.PasswordHash, true, lockoutOnFailure: false);
+                var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.PasswordHash, true, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
                     Debug.WriteLine("SUCCESSFUL LOGIN!");
