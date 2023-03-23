@@ -22,7 +22,7 @@ public partial class MeetgreetContext : DbContext
     public virtual DbSet<Userclaim> Userclaims { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseMySql("server=localhost;user=root;database=MEETGREET;password=MakotoNaegi2023", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.31-mysql"));
+        => optionsBuilder.UseMySql("server=localhost;user=root;database=MEETGREET;password={PASSWORD}", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.31-mysql"));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
