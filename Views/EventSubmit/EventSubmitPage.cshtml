@@ -57,10 +57,6 @@
 
             L.marker([41.40338, 2.17403]).addTo(map)
 
-            @foreach (var address in eventMarker.elements)
-            {
-                @:var marker = L.marker([@address.center.lat, @address.center.lon]).addTo(map)
-            }
         </script>
     </div>
 </div>

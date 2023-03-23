@@ -1,6 +1,7 @@
 ﻿using MeetGreet.Models;
 using Microsoft.AspNetCore.Mvc;
 using SendGrid;
+using System.Runtime.InteropServices;
 
 namespace MeetGreet.Controllers
 {
@@ -29,10 +30,13 @@ namespace MeetGreet.Controllers
             //HttpResponseMessage response = await client.GetAsync("https://overpass-api.de/api/interpreter?data=[out:json];area[addr:housenumber=%22101%22, addr:street=%22Larchmont Lane%22, addr:postcode=%2202339%22, addr:city=%22Hanover%22];out%20center%20;");
             //HttpResponseMessage response = await client.GetAsync("https://overpass-api.de/api/interpreter?data=[out:json];area[addr:full=%22" + housenumber + userAddress + userZipCode + userCity + "%22];out%20center%20;");
             //HttpResponseMessage response = await client.GetAsync("https://overpass-api.de/api/interpreter?data=[out:json];node[addr:full=%22101 Larchmont Lane 02339 Hanover%22];out%20center%20;");
-            HttpResponseMessage response = await client.GetAsync("https://overpass-api.de/api/interpreter?data=[out:json];area[name=%22Hanover%22]; area[addr:housenumber=%22101%22]; area[addr:street=%22Larchmont Lane%22]; area[addr:postcode=%2202339%22];out%20center%20;");
-            var eventMarker = await response.Content.ReadFromJsonAsync<Addresses>();
+            //HttpResponseMessage response = await client.GetAsync("https://overpass-api.de/api/interpreter?data=[out:json];area[name=%22Hanover%22]; area[addr:housenumber=%22101%22]; area[addr:street=%22Larchmont Lane%22]; area[addr:postcode=%2202339%22];out%20center%20;");
+            //var eventMarker = await response.Content.ReadFromJsonAsync<Addresses>();
 
-            ViewData["EventMarker"] = eventMarker;
+            HttpResponseMessage response = await client.GetAsync("http://localhost:8080/search.php?q=avenue%20pasteur");
+            System.Diagnostics.Debug.WriteLine(response.Content);
+
+            //ViewData["EventMarker"] = eventMarker;
             ViewData["Event"] = userEvent;
             return View();
         }
