@@ -15,9 +15,9 @@ namespace MeetGreet.Controllers
     {
 
         // TODO: Apparently my SignInManager/UserManager and my framework version is mixed up. Gotta fix that.
-        private readonly SignInManager<IdentityUser> signInManager;
-        private readonly UserManager<IdentityUser> userManager;
-        public AccountController(UserManager<IdentityUser> userMgr, SignInManager<IdentityUser> signinMgr)
+        private readonly SignInManager<User> signInManager;
+        private readonly UserManager<User> userManager;
+        public AccountController(UserManager<User> userMgr, SignInManager<User> signinMgr)
         {
             userManager = userMgr;
             signInManager = signinMgr;

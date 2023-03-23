@@ -1,5 +1,4 @@
-﻿using MeetGreet.Data;
-using MeetGreet.Models;
+﻿using MeetGreet.Models;
 using Microsoft.AspNetCore.Mvc;
 using MySqlConnector;
 using Newtonsoft.Json;
@@ -11,9 +10,9 @@ namespace MeetGreet.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly ApplicationDbContext _context;
+        private readonly MeetgreetContext _context;
         private readonly MySqlConnection connect;
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context, MySqlConnection connection)
+        public HomeController(ILogger<HomeController> logger, MeetgreetContext context, MySqlConnection connection)
         {
             _logger = logger;
             _context = context;
@@ -42,7 +41,7 @@ namespace MeetGreet.Controllers
             reader.Close();
             #endregion
 
-            #region NodeJS
+/*            #region NodeJS
             HttpClient client2 = new HttpClient();
 
             // Goes to the website and requests for data on that site (GET request).
@@ -53,7 +52,7 @@ namespace MeetGreet.Controllers
 
             // Prints out result (json string with status, message, and userInfo).
             System.Diagnostics.Debug.WriteLine($"NODEJS Result: {result}");
-            #endregion
+            #endregion*/
 
 
             HttpClient client = new HttpClient();
