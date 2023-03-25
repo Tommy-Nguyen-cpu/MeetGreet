@@ -74,10 +74,24 @@
 
                 function showPosition(position) {
 
-                    // TODO: Check the coordinates of the events and see if the user is within range.
 
                     // Centers the map to the current position of the user.
                     var map = L.map('map').setView([position.coords.latitude, position.coords.longitude], 13);
+
+                    // Code below checks to see if the event is within range. If the event is within range of the user, the event will be displayed.
+                    // Otherwise, the event will not.
+                    // TODO: Find a way of removing the event from the "array" if it is not within range.
+                    // TODO: We'll also want to switch the ordering of the check (check to see if user is within acceptable range).
+                    var obj = @Html.Raw(Json.Serialize(array));
+                    for (key in obj) {
+                        if (obj[key].lat <= position.coords.latitude + 50 && obj[key].lon <= position.coords.longitude + 50) {
+                            var marker = L.marker([obj[key].lat, obj[key].lon], { html: "<span style='background-color:#00FF00'>" }).addTo(map).bindPopup('TEMP EVENT').openPopup();
+                            marker._icon.classList.add("huechange");
+
+                        }
+                        console.log("Key: " + key);
+                    }
+
 
                     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
