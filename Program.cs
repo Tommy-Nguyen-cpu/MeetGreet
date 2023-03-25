@@ -16,7 +16,9 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<MeetgreetContext>();
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews().AddRazorPagesOptions(options => {
+    options.Conventions.AddAreaPageRoute("Identity", "/Account/Login", "");
+}); ;
 
 var app = builder.Build();
 
@@ -40,9 +42,6 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
 
 app.Run();
