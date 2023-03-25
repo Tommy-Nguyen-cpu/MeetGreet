@@ -3,7 +3,7 @@
     ViewBag.Title = "Home Page";
     var data = ViewData["Addresses"] as MeetGreet.Models.Addresses;
     var beattyHalls = ViewData["BeattyHalls"] as MeetGreet.Models.Addresses;
-    List<string> array = new List<string>();
+    var array = ViewData["Events"] as List<MeetGreet.Models.Event>;
 }
 
 <meta charset="utf-8">
@@ -94,14 +94,6 @@
                     }
                     map.setView([position.coords.latitude, position.coords.longitude], 13);
                 }
-
-
-                @{
-                    for(int i = 0; i < 10; i++)
-                    {
-                        array.Add($"{i}");
-                    }
-                }
             </script>
 
         </div>
@@ -132,10 +124,10 @@
                                         <div class="col">
                                             <div class="cards-wrapper">
                                                 <div class="card" style="background-color:lightgray">
-                                                    <img src="..." class="card-img-top" alt="...">
+                                                    <img src="@array[j].imageURL" class="card-img-top" alt="...">
                                                     <div class="card-body">
-                                                        <h5 class="card-title">Event Name:@array[j]</h5>
-                                                        <p class="card-text">Location: ___ <br />Geolocation:___<br />Description:___</p>
+                                                        <h5 class="card-title">Event Name:@array[j].EventName</h5>
+                                                        <p class="card-text">Location: @array[j].EventLocation <br />Geolocation: (@array[j].lat, @array[j].lon)<br />Description: @array[j].EventDescription</p>
                                                         <a href="#" class="btn btn-primary">Go somewhere</a>
                                                     </div>
                                                 </div>

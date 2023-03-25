@@ -35,11 +35,6 @@ namespace MeetGreet.Controllers
             
             // TODO: Sometimes this throws an exception. Fix it so that it never throws an exception.
             var myResult = await response.Content.ReadFromJsonAsync<Addresses>();
-/*            byte[] raw = client.DownloadData("https://overpass-api.de/api/interpreter?data=[out:json];area[name=%22Boston%22];(node[place=%22city%22](area););out%20center%20;");
-            string webData = System.Text.Encoding.UTF8.GetString(raw);
-
-            // Converts Json string into "Addresses" class. All data is filled out in the right location.
-            var myResult = JsonConvert.DeserializeObject<Addresses>(webData);*/
 
             foreach (var address in myResult.elements)
             {
@@ -56,6 +51,9 @@ namespace MeetGreet.Controllers
             response = await client.GetAsync("https://overpass-api.de/api/interpreter?data=[out:json];area[name=%22Beatty Hall%22];out%20center%20;");
             var beattyHalls = await response.Content.ReadFromJsonAsync<Addresses>();
             ViewData["BeattyHalls"] = beattyHalls;
+
+            // TODO: For some odd reason, when I try to send "events" as a list, it throws an error telling me to update to https.
+            ViewData["Events"] = GenerateEvents();
 
             return View();
         }
@@ -110,6 +108,28 @@ namespace MeetGreet.Controllers
             // Prints out result (json string with status, message, and userInfo).
             System.Diagnostics.Debug.WriteLine($"NODEJS Result: {result}");
             #endregion*/
+        }
+
+        // TODO: TEMP METHOD FOR GENERATING EVENTS UNTIL WE START CREATING LEGITIMATE EVENTS.
+        private List<Event> GenerateEvents()
+        {
+            List<Event> events = new List<Event>();
+
+            Random random= new Random();
+
+            for(int i = 0; i < 10; i++)
+            {
+                Event newEvent = new Event();
+                newEvent.EventName = $"Some Event {i}";
+                newEvent.EventDescription = "A Description";
+                newEvent.EventLocation = "Some Where :)";
+                newEvent.imageURL = "https://media.istockphoto.com/id/1181250359/photo/business-people.jpg?s=612x612&w=0&k=20&c=1DFEPJdcvlhFdQYp-hzj2CYXXRn-b6qYoPgyOptZsck=";
+                newEvent.lat= random.NextDouble()*100;
+                newEvent.lon = random.NextDouble()*100;
+                events.Add(newEvent);
+            }
+
+            return events;
         }
     }
 }
