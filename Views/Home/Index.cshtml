@@ -74,8 +74,9 @@
 
                 function showPosition(position) {
 
-                    // TODO: The location should be set to the current location of the user.
-                    // It is currently set to be whatever the first address is in the list of "addresses" passed to view.
+                    // TODO: Check the coordinates of the events and see if the user is within range.
+
+                    // Centers the map to the current position of the user.
                     var map = L.map('map').setView([position.coords.latitude, position.coords.longitude], 13);
 
                     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
