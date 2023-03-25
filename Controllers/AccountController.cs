@@ -31,7 +31,7 @@ namespace MeetGreet.Controllers
         /// <returns></returns>
         public ActionResult Login()
         {
-            return View();
+            return RedirectToPage("/Account/Login", new { area = "Identity" });
         }
 
         /// <summary>
