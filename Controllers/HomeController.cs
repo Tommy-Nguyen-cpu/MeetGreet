@@ -1,4 +1,5 @@
-﻿using MeetGreet.Models;
+﻿using MeetGreet.Data;
+using MeetGreet.Models;
 using Microsoft.AspNetCore.Mvc;
 using MySqlConnector;
 using Newtonsoft.Json;
@@ -21,38 +22,6 @@ namespace MeetGreet.Controllers
 
         public async Task<ActionResult> Index()
         {
-            #region MySQLConnector
-            // MYSqlConnector Alternative to NodeJS
-
-            // Opens connection to MYSQL database.
-            await connect.OpenAsync();
-
-            // Sends a request for email in table "user".
-            MySqlCommand command = new MySqlCommand("SELECT email from user;", connect);
-
-            // Reads result.
-            MySqlDataReader reader = command.ExecuteReader();
-
-            // Iterates through all results and prints out the email address.
-            while (reader.Read())
-            {
-                System.Diagnostics.Debug.WriteLine("Test Email Retrieve: " + reader.GetValue(0).ToString());
-            }
-            reader.Close();
-            #endregion
-
-/*            #region NodeJS
-            HttpClient client2 = new HttpClient();
-
-            // Goes to the website and requests for data on that site (GET request).
-            HttpResponseMessage response2 = await client2.GetAsync("http://localhost:5500/sign-in-user/baffog@wit.edu/test123");
-            
-            // Retrieves the response for the site as a string (if we plan on going with NodeJS from now on, we'll have to create a model for the data and call "ReadAsJsonAsync()" instead of "ReadAsStringAsync()").
-            var result = await response2.Content.ReadAsStringAsync();
-
-            // Prints out result (json string with status, message, and userInfo).
-            System.Diagnostics.Debug.WriteLine($"NODEJS Result: {result}");
-            #endregion*/
 
 
             HttpClient client = new HttpClient();
@@ -100,6 +69,47 @@ namespace MeetGreet.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+
+        /// <summary>
+        /// Method for storing the code for alternative methods of querying from a MYSQL database.
+        /// Not used for anything, just here for reference.
+        /// </summary>
+        private void AltDatabaseMethods()
+        {
+            #region MySQLConnector
+/*            // MYSqlConnector Alternative to NodeJS
+
+            // Opens connection to MYSQL database.
+            await connect.OpenAsync();
+
+            // Sends a request for email in table "user".
+            MySqlCommand command = new MySqlCommand("SELECT email from user;", connect);
+
+            // Reads result.
+            MySqlDataReader reader = command.ExecuteReader();
+
+            // Iterates through all results and prints out the email address.
+            while (reader.Read())
+            {
+                System.Diagnostics.Debug.WriteLine("Test Email Retrieve: " + reader.GetValue(0).ToString());
+            }
+            reader.Close();*/
+            #endregion
+
+            /*            #region NodeJS
+            HttpClient client2 = new HttpClient();
+
+            // Goes to the website and requests for data on that site (GET request).
+            HttpResponseMessage response2 = await client2.GetAsync("http://localhost:5500/sign-in-user/baffog@wit.edu/test123");
+            
+            // Retrieves the response for the site as a string (if we plan on going with NodeJS from now on, we'll have to create a model for the data and call "ReadAsJsonAsync()" instead of "ReadAsStringAsync()").
+            var result = await response2.Content.ReadAsStringAsync();
+
+            // Prints out result (json string with status, message, and userInfo).
+            System.Diagnostics.Debug.WriteLine($"NODEJS Result: {result}");
+            #endregion*/
         }
     }
 }
