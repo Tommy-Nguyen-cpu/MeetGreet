@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace MeetGreet;
+namespace MeetGreet.Models;
 
 public partial class Userclaim : IdentityUserClaim<string>
 {

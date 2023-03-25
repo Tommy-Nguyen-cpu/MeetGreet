@@ -1,4 +1,4 @@
-﻿@inject SignInManager<MeetGreet.User> SignInManager
+﻿@inject SignInManager<MeetGreet.Models.User> SignInManager
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
 }

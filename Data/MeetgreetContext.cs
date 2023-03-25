@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using MeetGreet.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace MeetGreet;
+namespace MeetGreet.Data;
 
 public partial class MeetgreetContext : IdentityUserContext<User, string, Userclaim, Userlogin, Usertoken>
 {
@@ -26,9 +27,9 @@ public partial class MeetgreetContext : IdentityUserContext<User, string, Usercl
 
     public virtual DbSet<Usertoken> Usertokens { get; set; }
 
-    // TODO: When we switch over to AWS, change this to the AWS connection string.
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseMySql("server=localhost;user=root;database=MEETGREET;password={REPLACE WITH YOUR PASSWORD}", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.31-mysql"));
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseMySql("server=localhost;user=root;database=MEETGREET;password=MakotoNaegi2023", ServerVersion.Parse("8.0.31-mysql"));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -84,6 +85,9 @@ public partial class MeetgreetContext : IdentityUserContext<User, string, Usercl
                 .UseCollation("utf8mb3_general_ci")
                 .HasCharSet("utf8mb3");
             entity.Property(e => e.PhoneNumberConfirmed).HasColumnType("bit(1)");
+            entity.Property(e => e.RememberMe)
+                .HasDefaultValueSql("b'0'")
+                .HasColumnType("bit(1)");
             entity.Property(e => e.SecurityStamp)
                 .HasMaxLength(256)
                 .UseCollation("utf8mb3_general_ci")

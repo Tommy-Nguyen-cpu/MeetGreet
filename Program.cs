@@ -1,4 +1,5 @@
-using MeetGreet;
+using MeetGreet.Data;
+using MeetGreet.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MySqlConnector;
@@ -13,7 +14,7 @@ builder.Services.AddDbContext<MeetgreetContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<MeetGreet.User>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<MeetgreetContext>();
 builder.Services.AddControllersWithViews();
 
