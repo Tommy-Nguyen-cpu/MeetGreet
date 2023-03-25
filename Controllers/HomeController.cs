@@ -1,5 +1,6 @@
 ﻿using MeetGreet.Data;
 using MeetGreet.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MySqlConnector;
 using Newtonsoft.Json;
@@ -8,6 +9,9 @@ using System.Net;
 
 namespace MeetGreet.Controllers
 {
+    // "Authorize" tag essentially says that only users who are logged in can have access to the pages associated with this controller.
+    // We can bring the "Authorize" tag to any and all controller and it will do the exact same thing.
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
