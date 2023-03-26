@@ -1,7 +1,13 @@
 ﻿using MeetGreet.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore.Storage;
+using Newtonsoft.Json;
+using NuGet.Protocol;
 using SendGrid;
 using System.Runtime.InteropServices;
+using System.Text.Json.Nodes;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace MeetGreet.Controllers
 {
@@ -33,10 +39,44 @@ namespace MeetGreet.Controllers
             //HttpResponseMessage response = await client.GetAsync("https://overpass-api.de/api/interpreter?data=[out:json];area[name=%22Hanover%22]; area[addr:housenumber=%22101%22]; area[addr:street=%22Larchmont Lane%22]; area[addr:postcode=%2202339%22];out%20center%20;");
             //var eventMarker = await response.Content.ReadFromJsonAsync<Addresses>();
 
-            HttpResponseMessage response = await client.GetAsync("http://localhost:8080/search.php?q=avenue%20pasteur");
-            System.Diagnostics.Debug.WriteLine(response.Content);
+            HttpResponseMessage response = await client.GetAsync("http://localhost:8080/search/%20" + userAddress + "%20" + userCity + "%20" + userZipCode + "?format=json&limit=1");
+            string httpResponse = await response.Content.ReadAsStringAsync();
+            string[] testing = httpResponse.Split(',', '"');
+            
+            double bruh = Convert.ToDouble(testing[34]);
+            double bruhh = Convert.ToDouble(testing[39]);
+            System.Diagnostics.Debug.WriteLine(bruh);
+            System.Diagnostics.Debug.WriteLine(bruhh);
 
-            //ViewData["EventMarker"] = eventMarker;
+            MapInfo eventMarker = new MapInfo
+            {
+                lat = bruh,
+                lon = bruhh
+            };
+
+            //foreach (var huh in testing)
+            //{
+                //System.Diagnostics.Debug.WriteLine(huh);
+            //}
+
+            //MapInfo please = new MapInfo
+            //{
+                //lat = string[]
+                //lon = string[]
+            //}
+            //JsonArray testing = JsonConvert.DeserializeObject<JsonArray>(httpResponse);
+            //var testing2 = testing.ToJson;
+            //var eventMarker = await testing2.
+            //System.Diagnostics.Debug.WriteLine(httpResponse);
+            //var eventMarker = await response.Content.ReadFromJsonAsync<MapInfo>();
+
+            //var eventMarker = await response.Content.ReadFromJsonAsync();
+            //var test = new StringContent(response.Content.ToString());
+            //System.Diagnostics.Debug.WriteLine(test);
+
+            
+
+            ViewData["MapInfo"] = eventMarker;
             ViewData["Event"] = userEvent;
             return View();
         }
