@@ -1,0 +1,30 @@
+﻿
+
+<div class="InfoForm">
+    <form method="post" asp-controller="EventSubmit" asp-action="EventSubmitPage">
+        <label>Event Name</label>
+        <br />
+        <input type="text" placaeholder="Event Name" name="userEventName" required/>
+        <br />
+        <label>Event Description</label>
+        <br />
+        <textarea name="userDescription" required></textarea>
+        <br />
+        <label>Street Address</label>
+        <br />
+        <input type="text" name="userAddress" required />
+        <br />
+        <label>City</label>
+        <br />
+        <input type="text" name="userCity" required />
+        <br />
+        <label>Zip Code</label>
+        <br>
+        <input type="text" name="userZipCode" required />
+        <br />
+        <input type="submit" value="Submit" />
+    </form>
+</div>
+
+
+

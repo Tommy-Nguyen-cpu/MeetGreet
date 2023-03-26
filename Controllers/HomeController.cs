@@ -6,6 +6,11 @@ using MySqlConnector;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Net;
+using RestSharp;
+using MimeKit.Text;
+using MimeKit;
+using MailKit.Security;
+using MailKit.Net.Smtp;
 
 namespace MeetGreet.Controllers
 {
@@ -64,6 +69,8 @@ namespace MeetGreet.Controllers
 
         public IActionResult Privacy()
         {
+          
+
             return View();
         }
 

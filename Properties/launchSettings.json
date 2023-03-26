@@ -8,7 +8,7 @@
     }
   },
   "profiles": {
-    "MeetGreet2": {
+    "MeetGreet": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
