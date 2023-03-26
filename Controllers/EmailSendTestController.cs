@@ -11,9 +11,9 @@ namespace MeetGreet.Controllers
     public class EmailSendTestController : Controller
     {
 
-        ApplicationDbContext _context;
+        MeetgreetContext _context;
 
-        public EmailSendTestController(ApplicationDbContext context)
+        public EmailSendTestController(MeetgreetContext context)
         {
             _context = context;
         }

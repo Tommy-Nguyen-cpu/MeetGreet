@@ -7,8 +7,10 @@ namespace MeetGreet.Models;
 
 public partial class User : IdentityUser
 {
+    // Primary key in database table.
     public override string Id { get; set; } = null!;
 
+    // IdentityUser requires this column. Currently, it is different from email, but if we ever decide to allow usernames other than email, we can implement it.
     public override string? UserName { get; set; }
 
     public override string? NormalizedUserName { get; set; }
