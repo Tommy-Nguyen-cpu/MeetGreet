@@ -29,7 +29,7 @@ namespace MeetGreet.Controllers
 
             static async Task Execute(string email)
             {
-                var apiKey = "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";
+                var apiKey = "can't push apiKey";
                 var client = new SendGridClient(apiKey);
                 var from = new EmailAddress("MeetGreetWIT@outlook.com", "Example User");
                 var subject = "MeetGreet Registration";
