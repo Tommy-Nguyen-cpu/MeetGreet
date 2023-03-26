@@ -93,7 +93,9 @@ namespace MeetGreet.Controllers
                 Event newEvent = new Event();
                 newEvent.EventName = $"Some Event {i}";
                 newEvent.EventDescription = "A Description";
-                newEvent.EventLocation = "Some Where :)";
+                newEvent.EventAddress = "Some Where :)";
+                newEvent.EventCity = "At Some City";
+                newEvent.EventZipcode = "At Some Zipcode";
                 newEvent.imageURL = "https://media.istockphoto.com/id/1181250359/photo/business-people.jpg?s=612x612&w=0&k=20&c=1DFEPJdcvlhFdQYp-hzj2CYXXRn-b6qYoPgyOptZsck=";
                 newEvent.lat= random.NextDouble()*100;
                 newEvent.lon = random.NextDouble()*100;

@@ -9,7 +9,9 @@ namespace MeetGreet.Models
         public string EventName { get; set; }
         public string EventDescription { get; set; }
         public string imageURL { get; set; }
-        public string EventLocation { get; set; }
+        public string EventAddress { get; set; }
+        public string EventCity { get; set; }
+        public string EventZipcode { get; set; }
         public double lon { get; set; }
         public double lat { get; set; }
     }
