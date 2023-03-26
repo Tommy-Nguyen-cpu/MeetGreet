@@ -19,6 +19,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using SendGrid.Helpers.Mail;
+using SendGrid;
 
 namespace MeetGreet.Areas.Identity.Pages.Account
 {
@@ -133,9 +135,7 @@ namespace MeetGreet.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
+                    await SendEmail(user.Email, $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
                         return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
@@ -177,6 +177,19 @@ namespace MeetGreet.Areas.Identity.Pages.Account
                 throw new NotSupportedException("The default UI requires a user store with email support.");
             }
             return (IUserEmailStore<User>)_userStore;
+        }
+
+        private async Task SendEmail(string receipientEmail, string htmlBody )
+        {
+            var apiKey = "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";
+            var client = new SendGridClient(apiKey);
+            var from = new EmailAddress("MeetGreetWIT@outlook.com", "MeetGreetNotification");
+            var subject = "MeetGreet Email Confirmation";
+            var to = new EmailAddress(receipientEmail);
+            var plainTextContent = htmlBody;
+            var htmlContent = htmlBody;
+            var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
+            var response = await client.SendEmailAsync(msg);
         }
     }
 }
