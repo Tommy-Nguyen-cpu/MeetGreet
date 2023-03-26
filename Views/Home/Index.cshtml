@@ -3,7 +3,7 @@
     ViewBag.Title = "Home Page";
     var data = ViewData["Addresses"] as MeetGreet.Models.Addresses;
     var beattyHalls = ViewData["BeattyHalls"] as MeetGreet.Models.Addresses;
-    List<string> array = new List<string>();
+    var array = ViewData["Events"] as List<MeetGreet.Models.Event>;
 }
 
 <meta charset="utf-8">
@@ -12,6 +12,19 @@
 <style>
     #map {
         height: 300px;
+    }
+    
+    .card, cards-wrapper, card-body {
+        background-color: darkgray;
+    }
+    .carousel-inner.myInner {
+        border-top: 2px;
+        border-left: 2px;
+        border-right: 2px;
+        border-bottom: 2px;
+        border-color: black;
+        background-color: white;
+        border-style: solid
     }
 </style>
 
@@ -61,9 +74,24 @@
 
                 function showPosition(position) {
 
-                    // TODO: The location should be set to the current location of the user.
-                    // It is currently set to be whatever the first address is in the list of "addresses" passed to view.
+
+                    // Centers the map to the current position of the user.
                     var map = L.map('map').setView([position.coords.latitude, position.coords.longitude], 13);
+
+                    // Code below checks to see if the event is within range. If the event is within range of the user, the event will be displayed.
+                    // Otherwise, the event will not.
+                    // TODO: Find a way of removing the event from the "array" if it is not within range.
+                    // TODO: We'll also want to switch the ordering of the check (check to see if user is within acceptable range).
+                    var obj = @Html.Raw(Json.Serialize(array));
+                    for (key in obj) {
+                        if (obj[key].lat <= position.coords.latitude + 50 && obj[key].lon <= position.coords.longitude + 50) {
+                            var marker = L.marker([obj[key].lat, obj[key].lon], { html: "<span style='background-color:#00FF00'>" }).addTo(map).bindPopup('TEMP EVENT').openPopup();
+                            marker._icon.classList.add("huechange");
+
+                        }
+                        console.log("Key: " + key);
+                    }
+
 
                     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -81,69 +109,61 @@
                     }
                     map.setView([position.coords.latitude, position.coords.longitude], 13);
                 }
-
-
-                @{
-                    for(int i = 0; i < 10; i++)
-                    {
-                        array.Add($"{i}");
-                    }
-                }
             </script>
 
         </div>
-    </div>
-    <div class="row">
-        <textarea>This is where we'll have the feed.</textarea>
     </div>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+<div class="row">
     <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
 
-    <div class="carousel-inner">
-        <div class="carousel-item active">
-           <div class="row">
-             <div class="col">slide 1</div>
-             <div class="col">slide 2</div>
-             <div class="col">slide 3</div>
-             <div class="col">slide 4</div>
-           </div>
-        </div>
-        <div class="carousel-item">
-           <div class="row">
-             <div class="col">slide 5</div>
-             <div class="col">slide 6</div>
-             <div class="col">slide 7</div>
-             <div class="col">slide 8</div>
-           </div>
-        </div>
+            <div class="carousel-inner myInner">
                 @{
                     @for (int i = 0; i < array.Count; i += 4)
                     {
-                    <div class="carousel-item">
-                        <div class="row">
+                        var start = "active";
+                        if (i != 0)
+                        {
+                            start = "";
+                        }
+                        <div class="carousel-item @start">
+                            <div class="row">
 
-                                @for (int j = i; j < i+4; j++)
+                                @for (int j = i; j < i + 4; j++)
                                 {
-                                    @if(j < array.Count)
+                                    @if (j < array.Count)
                                     {
-                                        <div class="col">@array[j]</div>
+                                        <div class="col">
+                                            <div class="cards-wrapper">
+                                                <div class="card" style="background-color:lightgray">
+                                                    <img src="@array[j].imageURL" class="card-img-top" alt="...">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">Event Name:@array[j].EventName</h5>
+                                                        <p class="card-text">Location: @array[j].EventLocation <br />Geolocation: (@array[j].lat, @array[j].lon)<br />Description: @array[j].EventDescription</p>
+                                                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     }
                                 }
 
+                            </div>
                         </div>
-                    </div>
                     }
                 }
-      <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="sr-only">Previous</span>
-      </a>
-      <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="sr-only">Next</span>
-      </a>
-    </div> 
+                <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        </div>
+    </div>
 </body>
