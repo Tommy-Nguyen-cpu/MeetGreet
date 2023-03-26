@@ -21,30 +21,25 @@ namespace MeetGreet.Controllers
         {
             foreach(var email in _context.Users.Select(ex => ex.UserName))
             {
-                System.Diagnostics.Debug.WriteLine("Email: " + email);
+                //System.Diagnostics.Debug.WriteLine("Email: " + email);
+                //System.Diagnostics.Debug.Write(email);
+                Execute(email);
             }
             return View();
-        }
 
-        internal class Example
-        {
-            private static void Main()
+            static async Task Execute(string email)
             {
-                Execute().Wait();
-            }
-
-            static async Task Execute()
-            {
-                var apiKey = "place holder I have api Key didn't wanna push to github";
+                var apiKey = "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";
                 var client = new SendGridClient(apiKey);
                 var from = new EmailAddress("MeetGreetWIT@outlook.com", "Example User");
                 var subject = "MeetGreet Registration";
-                var to = new EmailAddress("test@example.com", "Example User");
+                var to = new EmailAddress(email, "Example User");
                 var plainTextContent = "and easy to do anywhere, even with C#";
                 var htmlContent = "<p>Thank you for signing up for MeetGreet.com!<p>";
                 var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
                 var response = await client.SendEmailAsync(msg);
             }
+
         }
     }
 }
