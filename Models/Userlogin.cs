@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace MeetGreet.Models;
 
-public partial class Userlogin : IdentityUserLogin<string>
+public partial class UserLogin : IdentityUserLogin<string>
 {
     public override string LoginProvider { get; set; } = null!;
 
