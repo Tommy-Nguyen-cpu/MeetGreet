@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace MeetGreet.Models;
 
-public partial class Usertoken : IdentityUserToken<string>
+public partial class UserToken : IdentityUserToken<string>
 {
     public override string UserId { get; set; } = null!;
 
