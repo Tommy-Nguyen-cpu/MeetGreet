@@ -35,4 +35,5 @@ public partial class User : IdentityUser
     public virtual ICollection<UserLogin> UserLogins { get; } = new List<UserLogin>();
 
     public virtual ICollection<UserToken> UserTokens { get; } = new List<UserToken>();
+    public virtual ICollection<Event> Events { get; } = new List<Event>();
 }

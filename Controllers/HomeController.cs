@@ -84,6 +84,20 @@ namespace MeetGreet.Controllers
         // TODO: TEMP METHOD FOR GENERATING EVENTS UNTIL WE START CREATING LEGITIMATE EVENTS.
         private List<Event> GenerateEvents()
         {
+            // TODO: Example for how we'd add events to the Event database table.
+            Event testEvent = new Event();
+            testEvent.CreatedByUserId = _context.Users.Where(ex => ex.Email == "nguyent68@wit.edu").First().Id;
+            testEvent.Title = "Some Event";
+            testEvent.Description = "A Description";
+            testEvent.Address = "Some Where :)";
+            testEvent.City = "At Some City";
+            testEvent.ZipCode = "At Some Zipcode";
+            //newEvent.imageURL = "https://media.istockphoto.com/id/1181250359/photo/business-people.jpg?s=612x612&w=0&k=20&c=1DFEPJdcvlhFdQYp-hzj2CYXXRn-b6qYoPgyOptZsck=";
+            testEvent.GeoLocationLatitude = 120;
+            testEvent.GeoLocationLatitude = 120;
+            _context.Add(testEvent);
+            _context.SaveChanges();
+
             List<Event> events = new List<Event>();
 
             Random random= new Random();
@@ -91,14 +105,14 @@ namespace MeetGreet.Controllers
             for(int i = 0; i < 10; i++)
             {
                 Event newEvent = new Event();
-                newEvent.EventName = $"Some Event {i}";
-                newEvent.EventDescription = "A Description";
-                newEvent.EventAddress = "Some Where :)";
-                newEvent.EventCity = "At Some City";
-                newEvent.EventZipcode = "At Some Zipcode";
-                newEvent.imageURL = "https://media.istockphoto.com/id/1181250359/photo/business-people.jpg?s=612x612&w=0&k=20&c=1DFEPJdcvlhFdQYp-hzj2CYXXRn-b6qYoPgyOptZsck=";
-                newEvent.lat= random.NextDouble()*100;
-                newEvent.lon = random.NextDouble()*100;
+                newEvent.Title = $"Some Event {i}";
+                newEvent.Description = "A Description";
+                newEvent.Address = "Some Where :)";
+                newEvent.City = "At Some City";
+                newEvent.ZipCode = "At Some Zipcode";
+                //newEvent.imageURL = "https://media.istockphoto.com/id/1181250359/photo/business-people.jpg?s=612x612&w=0&k=20&c=1DFEPJdcvlhFdQYp-hzj2CYXXRn-b6qYoPgyOptZsck=";
+                newEvent.GeoLocationLatitude = random.NextDouble()*100;
+                newEvent.GeoLocationLatitude = random.NextDouble()*100;
                 events.Add(newEvent);
             }
 
