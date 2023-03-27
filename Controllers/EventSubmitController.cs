@@ -23,11 +23,11 @@ namespace MeetGreet.Controllers
         {
             Event userEvent = new Event
             {
-                EventName = userEventName,
-                EventDescription = userDescription,
-                EventAddress = userAddress,
-                EventCity = userCity,
-                EventZipcode = userZipCode
+                Title = userEventName,
+                Description = userDescription,
+                Address = userAddress,
+                City = userCity,
+                ZipCode = userZipCode
             };
             
             HttpClient client = new HttpClient();

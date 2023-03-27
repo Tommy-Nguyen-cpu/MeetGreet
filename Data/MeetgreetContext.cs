@@ -25,6 +25,8 @@ public partial class MeetgreetContext : IdentityUserContext<User, string, UserCl
 
     public virtual DbSet<UserToken> UserTokens { get; set; }
 
+    public virtual DbSet<Event> Events { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseMySql("server=meetgreet-dev.ccg48bpsuvv6.us-east-2.rds.amazonaws.com,3306;user=admin;database=MEETGREET;password=MeetGreetTGB!", ServerVersion.Parse("8.0.28-mysql"));
@@ -76,6 +78,35 @@ public partial class MeetgreetContext : IdentityUserContext<User, string, UserCl
             entity.HasOne(d => d.User).WithMany(p => p.UserClaims)
                 .HasForeignKey(d => d.UserId)
                 .HasConstraintName("UserClaims_Users_UserId");
+        });
+
+        modelBuilder.Entity<Event>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("Event");
+
+            entity.HasIndex(e => e.CreatedByUserId, "CreatedByUserId");
+
+            entity.Property(e => e.Address).HasMaxLength(500);
+            entity.Property(e => e.City).HasMaxLength(500);
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnType("datetime");
+            entity.Property(e => e.CreatedByUserId).HasMaxLength(450);
+            entity.Property(e => e.Description).HasMaxLength(500);
+            entity.Property(e => e.GeoLocationLatitude)
+                .HasColumnName("GeoLocation_Latitude");
+            entity.Property(e => e.GeoLocationLongitude)
+                .HasColumnName("GeoLocation_Longitude");
+            entity.Property(e => e.ScheduledDateTime).HasColumnType("datetime");
+            entity.Property(e => e.Title).HasMaxLength(500);
+            entity.Property(e => e.ZipCode).HasMaxLength(500);
+
+            entity.HasOne(d => d.CreatedByUser).WithMany(p => p.Events)
+                .HasForeignKey(d => d.CreatedByUserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("Event_ibfk_1");
         });
 
         modelBuilder.Entity<UserLogin>(entity =>
