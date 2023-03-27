@@ -1,10 +1,12 @@
-﻿using MeetGreet.Models;
+﻿using Azure;
+using MeetGreet.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore.Storage;
 using Newtonsoft.Json;
 using NuGet.Protocol;
 using SendGrid;
+using System.Net;
 using System.Runtime.InteropServices;
 using System.Text.Json.Nodes;
 using static System.Net.Mime.MediaTypeNames;
@@ -29,27 +31,26 @@ namespace MeetGreet.Controllers
                 City = userCity,
                 ZipCode = userZipCode
             };
-            
-            HttpClient client = new HttpClient();
 
-            HttpResponseMessage response = await client.GetAsync("http://localhost:8080/search/%20" + userAddress + "%20" + userCity + "%20" + userZipCode + "?format=json&limit=1");
-            string httpResponse = await response.Content.ReadAsStringAsync();
-            //thow an expception for improper query to api to prevent improper data being displayed to user in EventSubmitView
-            if(httpResponse == null)
-            {
-                throw new Exception();
-            }
-            string[] testing = httpResponse.Split(',', '"');
-            
-            double latitude = Convert.ToDouble(testing[34]);
-            double longitude = Convert.ToDouble(testing[39]);
+            HttpClient test = new HttpClient();
+
+            test.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36");
+
+            HttpResponseMessage resp = await test.GetAsync("https://nominatim.openstreetmap.org/search/" + userAddress + "%20" + userCity + "%20" + userZipCode + "?format=json&limit=1");
+            string httpResponse = await resp.Content.ReadAsStringAsync();
+            System.Diagnostics.Debug.WriteLine(httpResponse);
+
+            string[] respArray = httpResponse.Split(',', '"');
+
+            double latitude = Convert.ToDouble(respArray[34]);
+            double longitude = Convert.ToDouble(respArray[39]);
 
             MapInfo eventMarker = new MapInfo
             {
-                lat = latitude,
-                lon = longitude
+            lat = latitude,
+            lon = longitude
             };
-          
+
             ViewData["MapInfo"] = eventMarker;
             ViewData["Event"] = userEvent;
             return View();
