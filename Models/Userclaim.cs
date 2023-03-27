@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace MeetGreet.Models;
 
-public partial class Userclaim : IdentityUserClaim<string>
+public partial class UserClaim : IdentityUserClaim<string>
 {
     public override int Id { get; set; }
 
