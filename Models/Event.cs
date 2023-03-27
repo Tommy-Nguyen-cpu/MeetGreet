@@ -1,18 +1,31 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
 
-namespace MeetGreet.Models
+namespace MeetGreet.Models;
+
+public partial class Event
 {
-    // TODO: TEMP MODEL UNTIL WE GET A DATABASE TABLE FOR EVENTS
-    public class Event
-    {
-        public string EventId { get; set; }
-        public string EventName { get; set; }
-        public string EventDescription { get; set; }
-        public string imageURL { get; set; }
-        public string EventAddress { get; set; }
-        public string EventCity { get; set; }
-        public string EventZipcode { get; set; }
-        public double lon { get; set; }
-        public double lat { get; set; }
-    }
+    public int Id { get; set; }
+
+    public string Title { get; set; } = null!;
+
+    public DateTime CreatedAt { get; set; }
+
+    public string CreatedByUserId { get; set; } = null!;
+
+    public string Description { get; set; } = null!;
+
+    public double GeoLocationLongitude { get; set; }
+
+    public double GeoLocationLatitude { get; set; }
+
+    public string ZipCode { get; set; } = null!;
+
+    public string City { get; set; } = null!;
+
+    public string Address { get; set; } = null!;
+
+    public DateTime ScheduledDateTime { get; set; }
+
+    public virtual User CreatedByUser { get; set; } = null!;
 }
