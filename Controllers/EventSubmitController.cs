@@ -1,15 +1,6 @@
-﻿using Azure;
-using MeetGreet.Models;
+﻿using MeetGreet.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
-using Microsoft.EntityFrameworkCore.Storage;
-using Newtonsoft.Json;
-using NuGet.Protocol;
-using SendGrid;
-using System.Net;
-using System.Runtime.InteropServices;
-using System.Text.Json.Nodes;
-using static System.Net.Mime.MediaTypeNames;
+
 
 namespace MeetGreet.Controllers
 {
@@ -32,18 +23,27 @@ namespace MeetGreet.Controllers
                 ZipCode = userZipCode
             };
 
-            HttpClient test = new HttpClient();
+            double latitude = 0;
+            double longitude = 0;
 
-            test.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36");
+            //my version of error handling kinda klunky and not the best but very open to change just something quick I came up with
+            try
+            {
+                HttpClient test = new HttpClient();
 
-            HttpResponseMessage resp = await test.GetAsync("https://nominatim.openstreetmap.org/search/" + userAddress + "%20" + userCity + "%20" + userZipCode + "?format=json&limit=1");
-            string httpResponse = await resp.Content.ReadAsStringAsync();
-            System.Diagnostics.Debug.WriteLine(httpResponse);
+                test.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36");
 
-            string[] respArray = httpResponse.Split(',', '"');
+                HttpResponseMessage resp = await test.GetAsync("https://nominatim.openstreetmap.org/search/" + userAddress + "%20" + userCity + "%20" + userZipCode + "?format=json&limit=1");
+                string httpResponse = await resp.Content.ReadAsStringAsync();
+                string[] respArray = httpResponse.Split(',', '"');
 
-            double latitude = Convert.ToDouble(respArray[34]);
-            double longitude = Convert.ToDouble(respArray[39]);
+                latitude = Convert.ToDouble(respArray[34]);
+                longitude = Convert.ToDouble(respArray[39]);
+            }
+            catch(Exception err)
+            {
+                return View("~/Views/EventCreation/EventCreationPageError.cshtml");
+            }
 
             MapInfo eventMarker = new MapInfo
             {

@@ -60,6 +60,14 @@
     </div>
 </div>
 
-<div>
-   < --- place button stuff here ---> 
+<div id="buttons">
+    <p>Something wrong? Click here to go back and retry the event creation.</p>
+    <form asp-controller="EventCreation" asp-action="EventCreationPage">
+        <input type="submit" value="Go Back" />
+    </form> 
+
+    <p>Click here to submit your event so others can see it!</p>
+    <form asp-controller="IndividualEvent" asp-action="IndividualEventPage">
+        <input type="submit" />
+    </form>
 </div>
