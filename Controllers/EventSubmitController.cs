@@ -12,12 +12,13 @@ namespace MeetGreet.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> EventSubmitPage(string userEventName, string userDescription, string userAddress, string userCity, string userZipCode)
+        public async Task<IActionResult> EventSubmitPage(string userEventName, string userDescription, DateTime userDateTime, string userAddress, string userCity, string userZipCode)
         {
             Event userEvent = new Event
             {
                 Title = userEventName,
                 Description = userDescription,
+                ScheduledDateTime = userDateTime,
                 Address = userAddress,
                 City = userCity,
                 ZipCode = userZipCode
