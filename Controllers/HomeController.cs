@@ -157,6 +157,28 @@ namespace MeetGreet.Controllers
         /// </summary>
         private async void QueryThroughContext()
         {
+            #region Retrieve Entries In A Database Table
+
+            // Retrieving data from a database is incredibly straightforward.
+            // _context (our local instance of MeetgreetContext) is our portal to the database.
+            // _context contains everything we need to retrieve, create, update, and remove entries.
+
+            // in the example below, we iterate through all entries in the table "Users".
+            foreach(var user in _context.Users)
+            {
+                // We then check to see if an entry contains the email we want.
+                // Note that checking is not limited to just emails, you can check to see if a user contains a certain id, password, etc.
+                if(user.Email == "SomeEmail@gmail.com")
+                {
+                    // After this point, we can do whatever we want. We can return the current "user" variable, add it to a list of users, etc.
+                    Debug.WriteLine("Found SomeEmail@gmail.com email!");
+                }
+            }
+
+
+            #endregion
+
+
             #region Create Entries In a Database Table
             // Creating a new entry for a database is very easy.
             // All that is needed to be done is to instantiate a model, and add data to each fields in the model.
