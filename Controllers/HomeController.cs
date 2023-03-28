@@ -20,7 +20,11 @@ namespace MeetGreet.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+
+        // _context gives us direct access to the database. So we can use _context to query for data in the database.
         private readonly MeetgreetContext _context;
+
+        // "connect" isn't used for any functionality at the moment. It is here mainly for running one of the examples below.
         private readonly MySqlConnection connect;
         public HomeController(ILogger<HomeController> logger, MeetgreetContext context, MySqlConnection connection)
         {
@@ -29,42 +33,25 @@ namespace MeetGreet.Controllers
             connect = connection;
         }
 
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(string? searchString)
         {
-
-
-            HttpClient client = new HttpClient();
-
-            // Below is the url for querying for a specific location.
-            // "https://overpass-api.de/api/interpreter?data=[out:json];area[name=%22Beatty Hall%22];out%20center%20;"
-
-            // Query for information on a city. NOTE: DIFFERENT THAN QUERYING FOR INFO ON A SPECIFIC LOCATION
-            // Specific location has a "center" key where the lat and lon are stored, city queries DO NOT have "center" key.
-            HttpResponseMessage response = await client.GetAsync("https://overpass-api.de/api/interpreter?data=[out:json];area[name=%22Boston%22];(node[place=%22city%22](area););out%20center%20;");
-            
-            // TODO: Sometimes this throws an exception. Fix it so that it never throws an exception.
-            var myResult = await response.Content.ReadFromJsonAsync<Addresses>();
-
-            foreach (var address in myResult.elements)
+            // If the user the search bar to search for an event by name, we will query in the context object.
+            if (!String.IsNullOrEmpty(searchString))
             {
-                if (address.center != null)
+                // Searches for all events with the matching search string.
+                List<Event> searchedEvents = new List<Event>();
+                foreach(var myEvent in _context.Events)
                 {
-                    System.Diagnostics.Debug.WriteLine($"Lat, Lon: {address.center.lat}, {address.center.lon}");
+                    if(myEvent.Title.ToLower().Contains(searchString))
+                        searchedEvents.Add(myEvent);
                 }
-                System.Diagnostics.Debug.WriteLine($"Name: {address.tags.name}\n\n");
+
+                // Returns list of all events containing the same search string.
+                return View(searchedEvents);
             }
 
-            ViewData["Addresses"] = myResult;
-
-            // Retrieves all data on all addresses with "Beatty Hall" as name.
-            response = await client.GetAsync("https://overpass-api.de/api/interpreter?data=[out:json];area[name=%22Beatty Hall%22];out%20center%20;");
-            var beattyHalls = await response.Content.ReadFromJsonAsync<Addresses>();
-            ViewData["BeattyHalls"] = beattyHalls;
-
-            // TODO: For some odd reason, when I try to send "events" as a list, it throws an error telling me to update to https.
-            ViewData["Events"] = GenerateEvents();
-
-            return View();
+            // Sends the list of events to the View.
+            return View(GenerateEvents());
         }
 
         public IActionResult Privacy()
