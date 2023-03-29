@@ -11,6 +11,8 @@ using MimeKit.Text;
 using MimeKit;
 using MailKit.Security;
 using MailKit.Net.Smtp;
+using System.Security.Claims;
+using System;
 
 namespace MeetGreet.Controllers
 {
@@ -33,7 +35,52 @@ namespace MeetGreet.Controllers
             connect = connection;
         }
 
-        public async Task<ActionResult> Index(string? searchString)
+        public async Task<ActionResult> Attendance(int eventID)
+        {
+
+            Debug.WriteLine("Got to attendance method with eventID: " + eventID);
+
+            string? id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if(!string.IsNullOrEmpty(id) )
+            {
+                AttendingIndication attendance = new AttendingIndication();
+                attendance.UserId = id;
+
+                foreach (var myUser in _context.Users)
+                {
+                    if (myUser.Id.Contains(id))
+                    {
+                        attendance.User= myUser;
+                        break;
+                    }
+                }
+
+                attendance.EventId = eventID;
+
+                foreach(var myEvent in _context.Events)
+                {
+                    if(myEvent.Id == eventID)
+                    {
+                        attendance.Event= myEvent;
+                        break;
+                    }
+                }
+
+                // TODO: The value below should be determined based on which button is clicked.
+                attendance.Status = 0;
+
+                _context.Add(attendance);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                throw new ArgumentException("Something went wrong! Cannot get User ID!!!");
+            }
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult Index(string? searchString)
         {
             // If the user the search bar to search for an event by name, we will query in the context object.
             if (!String.IsNullOrEmpty(searchString))
@@ -71,19 +118,12 @@ namespace MeetGreet.Controllers
         // TODO: TEMP METHOD FOR GENERATING EVENTS UNTIL WE START CREATING LEGITIMATE EVENTS.
         private List<Event> GenerateEvents()
         {
+            Debug.WriteLine("There are " + _context.Events.Count() + " events in the database table");
             // TODO: Example for how we'd add events to the Event database table.
-            Event testEvent = new Event();
-            testEvent.CreatedByUserId = _context.Users.Where(ex => ex.Email == "nguyent68@wit.edu").First().Id;
-            testEvent.Title = "Some Event";
-            testEvent.Description = "A Description";
-            testEvent.Address = "Some Where :)";
-            testEvent.City = "At Some City";
-            testEvent.ZipCode = "At Some Zipcode";
-            //newEvent.imageURL = "https://media.istockphoto.com/id/1181250359/photo/business-people.jpg?s=612x612&w=0&k=20&c=1DFEPJdcvlhFdQYp-hzj2CYXXRn-b6qYoPgyOptZsck=";
-            testEvent.GeoLocationLatitude = 120;
-            testEvent.GeoLocationLatitude = 120;
-            _context.Add(testEvent);
-            _context.SaveChanges();
+            foreach(var myEvent in _context.Events)
+            {
+                Debug.WriteLine("Event Title: " + myEvent.Title);
+            }
 
             List<Event> events = new List<Event>();
 
@@ -92,6 +132,7 @@ namespace MeetGreet.Controllers
             for(int i = 0; i < 10; i++)
             {
                 Event newEvent = new Event();
+                newEvent.Id = i;
                 newEvent.Title = $"Some Event {i}";
                 newEvent.Description = "A Description";
                 newEvent.Address = "Some Where :)";

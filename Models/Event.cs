@@ -26,6 +26,8 @@ public partial class Event
     public string Address { get; set; } = null!;
 
     public DateTime ScheduledDateTime { get; set; }
+    public int Radius { get; set; }
 
+    public virtual ICollection<AttendingIndication> AttendingIndications { get; } = new List<AttendingIndication>();
     public virtual User CreatedByUser { get; set; } = null!;
 }

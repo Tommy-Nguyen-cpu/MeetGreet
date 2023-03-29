@@ -60,7 +60,7 @@
                     if (navigator.geolocation) {
                         navigator.geolocation.getCurrentPosition(showPosition);
                     } else {
-
+                        // TODO: Figure out how we'll add HTML tags through JavaScript.
                     }
                 }
 
@@ -141,6 +141,10 @@
                                                     <div class="card" style="background-color:lightgray">
                                                         <img src="..." class="card-img-top" alt="...">
                                                         <div class="card-body">
+                                                            <form asp-action="Attendance" method="post">
+                                                                <input type="hidden" asp-for="@Model[j].Id" name="eventID" />
+                                                                <input type="submit" name="Interested" value="Interested"/>
+                                                            </form>
                                                             <h5 class="card-title">Event Name:@Model[j].Title</h5>
                                                             <p class="card-text">Location: @Model[j].Address, @Model[j].City, @Model[j].ZipCode <br />Geolocation: (@Model[j].GeoLocationLatitude, @Model[j].GeoLocationLongitude)<br />Description: @Model[j].Description</p>
                                                             <a href="#" class="btn btn-primary">Go somewhere</a>

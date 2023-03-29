@@ -17,6 +17,8 @@ public partial class MeetgreetContext : IdentityUserContext<User, string, UserCl
     {
     }
 
+    public virtual DbSet<AttendingIndication> AttendingIndications { get; set; }
+
     public virtual DbSet<User> Users { get; set; }
 
     public virtual DbSet<UserClaim> UserClaims { get; set; }
@@ -36,6 +38,35 @@ public partial class MeetgreetContext : IdentityUserContext<User, string, UserCl
         modelBuilder
             .UseCollation("utf8mb4_0900_ai_ci")
             .HasCharSet("utf8mb4");
+
+        modelBuilder.Entity<AttendingIndication>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("AttendingIndication");
+
+            entity.HasIndex(e => e.EventId, "EventID");
+
+            entity.HasIndex(e => e.UserId, "UserID");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("ID");
+            entity.Property(e => e.EventId).HasColumnName("EventID");
+            entity.Property(e => e.UserId)
+                .HasMaxLength(450)
+                .HasColumnName("UserID");
+
+            entity.HasOne(d => d.Event).WithMany(p => p.AttendingIndications)
+                .HasForeignKey(d => d.EventId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("AttendingIndication_ibfk_2");
+
+            entity.HasOne(d => d.User).WithMany(p => p.AttendingIndications)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("AttendingIndication_ibfk_1");
+        });
 
         modelBuilder.Entity<User>(entity =>
         {
@@ -102,6 +133,7 @@ public partial class MeetgreetContext : IdentityUserContext<User, string, UserCl
             entity.Property(e => e.ScheduledDateTime).HasColumnType("datetime");
             entity.Property(e => e.Title).HasMaxLength(500);
             entity.Property(e => e.ZipCode).HasMaxLength(500);
+            entity.Property(e => e.Radius);
 
             entity.HasOne(d => d.CreatedByUser).WithMany(p => p.Events)
                 .HasForeignKey(d => d.CreatedByUserId)

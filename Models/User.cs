@@ -30,6 +30,7 @@ public partial class User : IdentityUser
     [Display(Name = "Remember Me?")]
     public bool RememberMe { get; set; }
 
+    public virtual ICollection<AttendingIndication> AttendingIndications { get; } = new List<AttendingIndication>();
     public virtual ICollection<UserClaim> UserClaims { get; } = new List<UserClaim>();
 
     public virtual ICollection<UserLogin> UserLogins { get; } = new List<UserLogin>();
