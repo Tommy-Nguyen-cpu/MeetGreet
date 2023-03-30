@@ -7,9 +7,11 @@ A website developed to connect students (with .EDU emails) to events within thei
 2. Alternatively, you can run the "dotnet-install" scripts.
   2.1. For Linux/MacOS users, the script can be found in "Linux & MacOS" folder.
   ![PathToMacScript](https://user-images.githubusercontent.com/75864631/228932990-61c6570a-dc63-41c2-8de2-d24392199139.PNG)
+    
     2.1.2. "cd" into the folder and run the following command "./dotnet-install.sh --channel 7.0".
   2.2. For Windows, the script can be found in "Windows" folder.
   ![InstallingForWindows](https://user-images.githubusercontent.com/75864631/228933426-ca124230-5ce2-4180-b232-86e9a2685886.PNG)
+    
     2.2.2. "cd" into the folder and run the following command "./dotnet-install.ps1 --channel 7.0".
 
 # Run MeetGreet Through Console
@@ -17,7 +19,7 @@ Once you have installed the sdk, run the following commands in this order:
    1. "cd ../../"
    2. "dotnet build"
    4. "dotnet publish"
-   5. "cd bin/Debug/net7.0"
+   5. "cd bin/Debug/netX.X" (where "netX.X" is a folder within Debug. You can navigate to this folder and figure out what "X.X" is).
    6. "dotnet MeetGreet.dll"
 
 After the final command, a command line window should pop up displaying the following messages:
