@@ -49,16 +49,6 @@ namespace MeetGreet.Controllers
                 _context.SaveChanges();
             }
 
-            //working on querying database
-            //await connect.OpenAsync();
-            //MySqlCommand command = new MySqlCommand("SELECT Title, Description, ScheduledDateTime FROM Event;", connect);
-            //MySqlDataReader reader = command.ExecuteReader();
-            //while(reader.Read())
-            //{
-            //System.Diagnostics.Debug.WriteLine("Test Event Retrieve: " + reader.GetValue(0).ToString());
-            //}
-            //reader.Close();
-
             ViewData["Event"] = userEvent;
             return View("~/Views/IndividualEvent/IndividualEventPage.cshtml");
         }
