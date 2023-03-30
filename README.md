@@ -14,6 +14,9 @@ A website developed to connect students (with .EDU emails) to events within thei
     2.1.2. "chmod +x ./dotnet-install.sh"
     2.1.3. "./dotnet-install.sh --channel 7.0".
     2.1.4. "cd ../../"
+    
+    NOTE: If after install .NET sdk, you receive an error saying that the command "dotnet" cannot be found, run the following command:
+      1. "export PATH="$PATH:$HOME/.dotnet"
 
 # Run MeetGreet Through Console
 Once you have installed the sdk, run the following commands in this order: 
