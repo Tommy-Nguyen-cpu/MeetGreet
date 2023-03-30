@@ -46,6 +46,9 @@ namespace MeetGreet.Controllers
                 return View("~/Views/EventCreation/EventCreationPageError.cshtml");
             }
 
+            userEvent.GeoLocationLatitude = latitude;
+            userEvent.GeoLocationLongitude = longitude;
+
             MapInfo eventMarker = new MapInfo
             {
             lat = latitude,

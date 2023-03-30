@@ -70,7 +70,16 @@
     </form> 
 
     <p>Click here to submit your event so others can see it!</p>
-    <form asp-controller="IndividualEvent" asp-action="IndividualEventPage">
+    <form method="post" asp-controller="IndividualEvent" asp-action="SubmitToSQL">
+        @* needs to be passed in as text becuase having type="datetime-local" sets the value back to default (01/01/001 12:00AM) *@
+        <input hidden type="text" name="eventDate" value="@userEventData.ScheduledDateTime" />
+        <input hidden type="text" name="eventTitle" value="@userEventData.Title" />
+        <input hidden type="text" name="eventDescription" value="@userEventData.Description" />
+        <input hidden type="text" name="eventAddress" value="@userEventData.Address" />
+        <input hidden type="text" name="eventCity" value="@userEventData.City" />
+        <input hidden type="text" name="eventZipCode" value="@userEventData.ZipCode" />
+        <input hidden type="number" name="eventLatitude" value="@userEventData.GeoLocationLatitude" />
+        <input hidden tpye="number" name="eventLongitude" value="@userEventData.GeoLocationLongitude" />
         <input type="submit" />
     </form>
 </div>

@@ -54,6 +54,7 @@ namespace MeetGreet.Controllers
                 System.Diagnostics.Debug.WriteLine($"Name: {address.tags.name}\n\n");
             }
 
+
             ViewData["Addresses"] = myResult;
 
             // Retrieves all data on all addresses with "Beatty Hall" as name.
