@@ -1,0 +1,38 @@
+﻿@page
+@using MeetGreet.Areas.Identity.Pages.Account.Manage;
+@model MyEvents
+<h1>My Hosted Events</h1>
+@{
+    foreach (var myEvent in Model.HostedEvents)
+    {
+        <div class="card" style="background-color:lightgray">
+            <img src="..." class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">Event Name:@myEvent.Title</h5>
+                <p class="card-text">Location: @myEvent.Address, @myEvent.City, @myEvent.ZipCode <br />Geolocation: (@myEvent.GeoLocationLatitude, @myEvent.GeoLocationLongitude)<br />Description: @myEvent.Description</p>
+                <a href="#" class="btn btn-primary">Go somewhere</a>
+            </div>
+        </div>
+
+        <br />
+        <br />
+    }
+}
+
+<h1>Attending Events</h1>
+@{
+    foreach (var myEvent in Model.AttendingEvents)
+    {
+        <div class="card" style="background-color:lightgray">
+                    <img src="..." class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">Event Name:@myEvent.Title</h5>
+                        <p class="card-text">Location: @myEvent.Address, @myEvent.City, @myEvent.ZipCode <br />Geolocation: (@myEvent.GeoLocationLatitude, @myEvent.GeoLocationLongitude)<br />Description: @myEvent.Description</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+        </div>
+
+        <br />
+        <br />
+    }
+}
