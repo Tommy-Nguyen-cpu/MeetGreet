@@ -164,6 +164,8 @@ public partial class MeetgreetContext : IdentityUserContext<User, string, UserCl
             entity.HasKey(e => new { e.UserId, e.LoginProvider, e.Name })
                 .HasName("PRIMARY")
                 .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0, 0 });
+            
+            entity.ToTable("UserTokens");
 
             entity.Property(e => e.UserId).HasMaxLength(450);
             entity.Property(e => e.LoginProvider).HasMaxLength(128);
