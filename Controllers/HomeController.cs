@@ -28,6 +28,7 @@ namespace MeetGreet.Controllers
 
         // "connect" isn't used for any functionality at the moment. It is here mainly for running one of the examples below.
         private readonly MySqlConnection connect;
+
         public HomeController(ILogger<HomeController> logger, MeetgreetContext context, MySqlConnection connection)
         {
             _logger = logger;
@@ -35,15 +36,19 @@ namespace MeetGreet.Controllers
             connect = connection;
         }
 
-        public async Task<ActionResult> Attendance(int eventID)
+        public async Task<ActionResult> Attendance(int eventID, string? Attending = null, string? Interested = null, string? NotAttending = null)
         {
 
             Debug.WriteLine("Got to attendance method with eventID: " + eventID);
+            Debug.WriteLine("Attending?: " + Attending);
+            Debug.WriteLine("Interested?: " + Interested);
+            Debug.WriteLine("Not Attending?: " + NotAttending);
 
             string? id = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if(!string.IsNullOrEmpty(id) )
             {
+
                 AttendingIndication attendance = new AttendingIndication();
                 attendance.UserId = id;
 
@@ -58,17 +63,13 @@ namespace MeetGreet.Controllers
 
                 attendance.EventId = eventID;
 
-                foreach(var myEvent in _context.Events)
-                {
-                    if(myEvent.Id == eventID)
-                    {
-                        attendance.Event= myEvent;
-                        break;
-                    }
-                }
-
                 // TODO: The value below should be determined based on which button is clicked.
-                attendance.Status = 0;
+                if (Attending != null)
+                    attendance.Status = 0;
+                else if (Interested != null)
+                    attendance.Status = 1;
+                else
+                    attendance.Status = 2;
 
                 _context.Add(attendance);
                 await _context.SaveChangesAsync();
@@ -82,6 +83,7 @@ namespace MeetGreet.Controllers
 
         public ActionResult Index(string? searchString)
         {
+
             // If the user the search bar to search for an event by name, we will query in the context object.
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -89,7 +91,7 @@ namespace MeetGreet.Controllers
                 List<Event> searchedEvents = new List<Event>();
                 foreach(var myEvent in _context.Events)
                 {
-                    if(myEvent.Title.ToLower().Contains(searchString))
+                    if(myEvent.Title.ToLower().Contains(searchString.ToLower()))
                         searchedEvents.Add(myEvent);
                 }
 
@@ -119,29 +121,12 @@ namespace MeetGreet.Controllers
         private List<Event> GenerateEvents()
         {
             Debug.WriteLine("There are " + _context.Events.Count() + " events in the database table");
-            // TODO: Example for how we'd add events to the Event database table.
-            foreach(var myEvent in _context.Events)
-            {
-                Debug.WriteLine("Event Title: " + myEvent.Title);
-            }
 
             List<Event> events = new List<Event>();
 
-            Random random= new Random();
-
-            for(int i = 0; i < 10; i++)
+            foreach(var myEvent in _context.Events)
             {
-                Event newEvent = new Event();
-                newEvent.Id = i;
-                newEvent.Title = $"Some Event {i}";
-                newEvent.Description = "A Description";
-                newEvent.Address = "Some Where :)";
-                newEvent.City = "At Some City";
-                newEvent.ZipCode = "At Some Zipcode";
-                //newEvent.imageURL = "https://media.istockphoto.com/id/1181250359/photo/business-people.jpg?s=612x612&w=0&k=20&c=1DFEPJdcvlhFdQYp-hzj2CYXXRn-b6qYoPgyOptZsck=";
-                newEvent.GeoLocationLatitude = random.NextDouble()*100;
-                newEvent.GeoLocationLatitude = random.NextDouble()*100;
-                events.Add(newEvent);
+                events.Add(myEvent);
             }
 
             return events;
