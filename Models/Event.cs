@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MeetGreet.Models;
 
@@ -26,7 +29,7 @@ public partial class Event
     public string Address { get; set; } = null!;
 
     public DateTime ScheduledDateTime { get; set; }
-    public int Radius { get; set; }
+    public int? Radius { get; set; }
 
     public virtual ICollection<AttendingIndication> AttendingIndications { get; } = new List<AttendingIndication>();
     public virtual User CreatedByUser { get; set; } = null!;
