@@ -14,9 +14,6 @@ A website developed to connect students (with .EDU emails) to events within thei
     2.1.2. "chmod +x ./dotnet-install.sh"
     2.1.3. "./dotnet-install.sh --channel 7.0".
     2.1.4. "cd ../../"
-    
-    **NOTE** : If after install .NET sdk, you receive an error saying that the command "dotnet" cannot be found, run the following command:
-      1. "export PATH="$PATH:$HOME/.dotnet"
 
 ## Run MeetGreet Through Console
 Once you have installed the sdk, run the following commands in this order: 
@@ -24,7 +21,10 @@ Once you have installed the sdk, run the following commands in this order:
    2. "dotnet publish"
    3. "cd bin/Debug/netX.X" (where "netX.X" is a folder within Debug. You can navigate to this folder and figure out what "X.X" is).
    4. "dotnet MeetGreet.dll"
-
+    
+    **NOTE** : If after install .NET sdk and attempting to run the "dotnet" commands, you receive an error saying that the command "dotnet" cannot be found, run the following command:
+      1. "export PATH="$PATH:$HOME/.dotnet"
+      
 After the final command, a command line window should pop up displaying the following messages:
 ![ResultFromRunning](https://user-images.githubusercontent.com/75864631/228938385-768fc981-1500-4437-a990-1c1e98323aff.PNG)
 
