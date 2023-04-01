@@ -3,8 +3,9 @@ A website developed to connect students (with .EDU emails) to events within thei
 
 
 ## Prerequisites
-1. In order to run MeetGreet, you must install ".NET SDK" from the following link: https://dotnet.microsoft.com/en-us/download/visual-studio-sdks. After words, follow the instructions once the sdk has completed downloading.
-2. Alternatively, you can run the "dotnet-install" scripts.
+In order to run MeetGreet, you must install ".NET SDK". You can install ".NET SDK" via the following methods:
+1. from the following link: https://dotnet.microsoft.com/en-us/download/visual-studio-sdks. After words, follow the instructions once the sdk has completed downloading.
+2. Follow the steps laid out in section "2.1" to install via command prompt.
 
   2.1. For Linux/MacOS users, the script to install .NET SDK can be found in "Linux & MacOS" folder.
   
