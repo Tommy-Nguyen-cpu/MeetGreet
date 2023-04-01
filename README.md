@@ -12,7 +12,7 @@ A website developed to connect students (with .EDU emails) to events within thei
     
     2.1.1. "cd" into the "Linux & MacOS" folder and run the following commands:
     2.1.2. "chmod +x ./dotnet-install.sh"
-    2.1.3. "./dotnet-install.sh --channel 7.0".
+    2.1.3. "./dotnet-install.sh".
     2.1.4. "cd ../../"
 
 ## Run MeetGreet Through Console
