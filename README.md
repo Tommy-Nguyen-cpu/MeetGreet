@@ -22,7 +22,7 @@ Once you have installed the sdk, run the following commands in this order:
    3. "cd bin/Debug/netX.X" (where "netX.X" is a folder within Debug. You can navigate to this folder and figure out what "X.X" is).
    4. "dotnet MeetGreet.dll"
     
-    **NOTE** : If after install .NET sdk and attempting to run the "dotnet" commands, you receive an error saying that the command "dotnet" cannot be found, run the following command:
+    **NOTE** : If after installing .NET sdk and attempting to run the "dotnet" commands, you receive an error saying that the command "dotnet" cannot be found, run the following command:
       1. "export PATH="$PATH:$HOME/.dotnet"
       
 After the final command, a command line window should pop up displaying the following messages:
