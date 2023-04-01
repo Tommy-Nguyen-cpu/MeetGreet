@@ -7,15 +7,12 @@
     var eventMarker = ViewData["MapInfo"] as MeetGreet.Models.MapInfo;
 }
 
-<h3>@userEventData.Title</h3>
-<br />
-<h3>@userEventData.Description</h3>
-<br />
-<h3>@userEventData.Address</h3>
-<br />
-<h3>@userEventData.City</h3>
-<br />
-<h3>@userEventData.ZipCode</h3>
+<h1>Please review the information below before submitting your event.</h1>
+
+<p>Your events title: @userEventData.Title</p>
+<p>Your events description: @userEventData.Description</p>
+<p>Your events scheduled date and time: @userEventData.ScheduledDateTime</p>
+<p>Your events Address: @userEventData.Address @userEventData.City, @userEventData.ZipCode</p>
 <br />
 
 <style>
@@ -58,4 +55,25 @@
             
         </script>
     </div>
+</div>
+
+<div id="buttons">
+    <p>Something wrong? Click "Go Back and retry the event creation. If not click "Submit" to submit your event. </p>
+    <form asp-controller="EventCreation" asp-action="EventCreationPage">
+        <input type="submit" value="Go Back" style="display: inline;" />
+    </form> 
+
+    
+    <form method="post" asp-controller="IndividualEvent" asp-action="SubmitToSQL">
+        @* needs to be passed in as text becuase having type="datetime-local" sets the value back to default (01/01/001 12:00AM) *@
+        <input hidden type="text" name="eventDate" value="@userEventData.ScheduledDateTime" />
+        <input hidden type="text" name="eventTitle" value="@userEventData.Title" />
+        <input hidden type="text" name="eventDescription" value="@userEventData.Description" />
+        <input hidden type="text" name="eventAddress" value="@userEventData.Address" />
+        <input hidden type="text" name="eventCity" value="@userEventData.City" />
+        <input hidden type="text" name="eventZipCode" value="@userEventData.ZipCode" />
+        <input hidden type="number" name="eventLatitude" value="@userEventData.GeoLocationLatitude" />
+        <input hidden tpye="number" name="eventLongitude" value="@userEventData.GeoLocationLongitude" />
+        <input type="submit" style="display: inline;"/>
+    </form>
 </div>

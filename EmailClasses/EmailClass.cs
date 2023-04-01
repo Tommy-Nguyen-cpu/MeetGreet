@@ -6,7 +6,7 @@ namespace MeetGreet.EmailClasses
     public class EmailClass
     {
 
-        private readonly string apiKey = "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";
+        private readonly string apiKey = "can't push email api key";
         public async Task SendEmail(string receipientEmail, string htmlBody)
         {
             var client = new SendGridClient(apiKey);
