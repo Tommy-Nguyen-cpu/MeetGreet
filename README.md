@@ -24,8 +24,9 @@ Once you have installed the sdk, run the following commands in this order:
     
     **NOTE** : If after installing .NET sdk and attempting to run the "dotnet" commands, you receive an error saying that the command "dotnet" cannot be found, run the following command:
       1. "export PATH="$PATH:$HOME/.dotnet"
+      Then try going through the steps outlined in "Run MeetGreet Through Console" again.
       
-After the final command, a command line window should pop up displaying the following messages:
+After running "dotnet MeetGreet.dll", a command line window should pop up displaying the following messages:
 ![ResultFromRunning](https://user-images.githubusercontent.com/75864631/228938385-768fc981-1500-4437-a990-1c1e98323aff.PNG)
 
 Part of the messages contain the URL we will be using to get to the site (the URL circled in red above).
