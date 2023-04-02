@@ -19,8 +19,8 @@ In order to run MeetGreet, you must install ".NET SDK". You can install ".NET SD
 ## Run MeetGreet Through Console
 Once you have installed the sdk, run the following commands in this order: 
    1. "dotnet build"
-   2. "dotnet publish"
-   3. "cd bin/Debug/netX.X" (where "netX.X" is a folder within Debug. You can navigate to this folder and figure out what "X.X" is).
+   2. "dotnet publish -o Release"
+   3. "cd Release"
    4. "dotnet MeetGreet.dll"
     
     **NOTE** : If after installing .NET sdk and attempting to run the "dotnet" commands, you receive an error saying that the command "dotnet" cannot be found, run the following command:
