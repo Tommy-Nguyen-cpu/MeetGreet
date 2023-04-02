@@ -136,19 +136,6 @@ namespace MeetGreet.Controllers
                 events.Add(myEvent);
             }
 
-            foreach(var myEvent in events)
-            {
-                // Iterates through all attendance indicators in the database.
-                foreach (var indicator in _context.AttendingIndications)
-                {
-                    // If the attendance indicator is for the current event, and the user ID matches the current user, we add the current AttendanceIndication entry into "myEvents" list of AttendanceIndications.
-                    if (indicator.EventId == myEvent.Id && indicator.UserId.ToLower().Equals(currentUserID.ToLower()))
-                    {
-                        myEvent.AttendingIndications.Add(indicator);
-                    }
-                }
-            }
-
             return events;
         }
 
