@@ -19,16 +19,37 @@ namespace MeetGreet.Controllers
             connect = connection;
         }
 
-        public IActionResult IndividualEventPage()
+        [HttpPost]
+        public async Task<IActionResult> IndividualEventPage(int eventID)
         {
+            await connect.OpenAsync();
+            // Sends a request for email in table "user".
+            MySqlCommand command = new MySqlCommand("SELECT * FROM Event WHERE ID="+ eventID, connect);
+
+            // Reads result.
+            MySqlDataReader reader = command.ExecuteReader();
+
+            // Iterates through all results and prints out the email address.
+            //while (reader.Read())
+            //{
+                //System.Diagnostics.Debug.WriteLine("Test Email Retrieve: " + reader.GetValue(0).ToString());
+            //}
+
+            //Event userEvent = new Event
+            //{
+                //Title = reader.GetValue(1).ToString(),
+                //Description = reader.GetValue(4).ToString(),
+               // ScheduledDateTime = reader.GetValue(6)
+            //}
+            reader.Close();
+
+
             return View();
         }
 
         [HttpPost]
         public async Task<IActionResult> SubmitToSQL(DateTime eventDate, string eventTitle, string eventDescription, string eventAddress, string eventCity, string eventZipCode, double eventLatitude, double eventLongitude)
         {
-            
-            //string? id = User.FindFirstValue(ClaimTypes.NameIdentifier);
             Event userEvent = new Event
             {
                 Title = eventTitle,

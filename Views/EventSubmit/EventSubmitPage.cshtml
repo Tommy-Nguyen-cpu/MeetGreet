@@ -42,9 +42,6 @@
             }
         </style>
         <script type="text/javascript">
-            // TODO: The location should be set to the current location of the user.
-            // It is currently set to be whatever the first address is in the list of "addresses" passed to view.
-            // Put in any random longitude and latitude to allow this to work
             var map = L.map('map').setView([@eventMarker.lat, @eventMarker.lon], 15);
 
             L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
