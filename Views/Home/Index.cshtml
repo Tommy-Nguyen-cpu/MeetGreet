@@ -155,12 +155,11 @@
                                                     <div class="card" style="background-color:lightgray">
                                                         <img src="..." class="card-img-top" alt="...">
                                                         <div class="card-body">
-                                                            <input type="hidden" asp-for="@Model[j].Id" name="eventID" />
                                                             @if(Model[j].AttendingIndications.Count == 0)
                                                             {
-                                                                <a asp-action="Attendance" asp-route-Attending="Attending"><i class="fa fa-user-check fa-beat"></i></a>
-                                                                <a asp-action="Attendance" asp-route-Interested="Interested"><i class="fa fa-user-pen fa-beat"></i></a>
-                                                                <a asp-action="Attendance" asp-route-NotAttending="Not Attending"><i class="fa fa-user-slash fa-beat"></i></a>
+                                                                <a asp-action="Attendance" asp-route-Attending="@Model[j].Id"><i class="fa fa-user-check fa-beat"></i></a>
+                                                                <a asp-action="Attendance" asp-route-Interested="@Model[j].Id"><i class="fa fa-user-pen fa-beat"></i></a>
+                                                                <a asp-action="Attendance" asp-route-NotAttending="@Model[j].Id"><i class="fa fa-user-slash fa-beat"></i></a>
                                                             }
                                                             else
                                                             {
