@@ -11,6 +11,8 @@ using MimeKit.Text;
 using MimeKit;
 using MailKit.Security;
 using MailKit.Net.Smtp;
+using System.Security.Claims;
+using System;
 
 namespace MeetGreet.Controllers
 {
@@ -20,8 +22,13 @@ namespace MeetGreet.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+
+        // _context gives us direct access to the database. So we can use _context to query for data in the database.
         private readonly MeetgreetContext _context;
+
+        // "connect" isn't used for any functionality at the moment. It is here mainly for running one of the examples below.
         private readonly MySqlConnection connect;
+
         public HomeController(ILogger<HomeController> logger, MeetgreetContext context, MySqlConnection connection)
         {
             _logger = logger;
@@ -29,43 +36,71 @@ namespace MeetGreet.Controllers
             connect = connection;
         }
 
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Attendance(int eventID, string? Attending = null, string? Interested = null, string? NotAttending = null)
         {
 
+            Debug.WriteLine("Got to attendance method with eventID: " + eventID);
+            Debug.WriteLine("Attending?: " + Attending);
+            Debug.WriteLine("Interested?: " + Interested);
+            Debug.WriteLine("Not Attending?: " + NotAttending);
 
-            HttpClient client = new HttpClient();
+            string? id = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            // Below is the url for querying for a specific location.
-            // "https://overpass-api.de/api/interpreter?data=[out:json];area[name=%22Beatty Hall%22];out%20center%20;"
-
-            // Query for information on a city. NOTE: DIFFERENT THAN QUERYING FOR INFO ON A SPECIFIC LOCATION
-            // Specific location has a "center" key where the lat and lon are stored, city queries DO NOT have "center" key.
-            HttpResponseMessage response = await client.GetAsync("https://overpass-api.de/api/interpreter?data=[out:json];area[name=%22Boston%22];(node[place=%22city%22](area););out%20center%20;");
-            
-            // TODO: Sometimes this throws an exception. Fix it so that it never throws an exception.
-            var myResult = await response.Content.ReadFromJsonAsync<Addresses>();
-
-            foreach (var address in myResult.elements)
+            if(!string.IsNullOrEmpty(id) )
             {
-                if (address.center != null)
+
+                AttendingIndication attendance = new AttendingIndication();
+                attendance.UserId = id;
+
+                foreach (var myUser in _context.Users)
                 {
-                    System.Diagnostics.Debug.WriteLine($"Lat, Lon: {address.center.lat}, {address.center.lon}");
+                    if (myUser.Id.Contains(id))
+                    {
+                        attendance.User= myUser;
+                        break;
+                    }
                 }
-                System.Diagnostics.Debug.WriteLine($"Name: {address.tags.name}\n\n");
+
+                attendance.EventId = eventID;
+
+                // TODO: The value below should be determined based on which button is clicked.
+                if (Attending != null)
+                    attendance.Status = 0;
+                else if (Interested != null)
+                    attendance.Status = 1;
+                else
+                    attendance.Status = 2;
+
+                _context.Add(attendance);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                throw new ArgumentException("Something went wrong! Cannot get User ID!!!");
+            }
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult Index(string? searchString)
+        {
+
+            // If the user the search bar to search for an event by name, we will query in the context object.
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                // Searches for all events with the matching search string.
+                List<Event> searchedEvents = new List<Event>();
+                foreach(var myEvent in _context.Events)
+                {
+                    if(myEvent.Title.ToLower().Contains(searchString.ToLower()))
+                        searchedEvents.Add(myEvent);
+                }
+
+                // Returns list of all events containing the same search string.
+                return View(searchedEvents);
             }
 
-
-            ViewData["Addresses"] = myResult;
-
-            // Retrieves all data on all addresses with "Beatty Hall" as name.
-            response = await client.GetAsync("https://overpass-api.de/api/interpreter?data=[out:json];area[name=%22Beatty Hall%22];out%20center%20;");
-            var beattyHalls = await response.Content.ReadFromJsonAsync<Addresses>();
-            ViewData["BeattyHalls"] = beattyHalls;
-
-            // TODO: For some odd reason, when I try to send "events" as a list, it throws an error telling me to update to https.
-            ViewData["Events"] = GenerateEvents();
-
-            return View();
+            // Sends the list of events to the View.
+            return View(GenerateEvents());
         }
 
         public IActionResult Privacy()
@@ -85,36 +120,13 @@ namespace MeetGreet.Controllers
         // TODO: TEMP METHOD FOR GENERATING EVENTS UNTIL WE START CREATING LEGITIMATE EVENTS.
         private List<Event> GenerateEvents()
         {
-            // TODO: Example for how we'd add events to the Event database table.
-            Event testEvent = new Event();
-            testEvent.CreatedByUserId = _context.Users.Where(ex => ex.Email == "nguyent68@wit.edu").First().Id;
-            testEvent.Title = "Some Event";
-            testEvent.Description = "A Description";
-            testEvent.Address = "Some Where :)";
-            testEvent.City = "At Some City";
-            testEvent.ZipCode = "At Some Zipcode";
-            //newEvent.imageURL = "https://media.istockphoto.com/id/1181250359/photo/business-people.jpg?s=612x612&w=0&k=20&c=1DFEPJdcvlhFdQYp-hzj2CYXXRn-b6qYoPgyOptZsck=";
-            testEvent.GeoLocationLatitude = 120;
-            testEvent.GeoLocationLatitude = 120;
-            _context.Add(testEvent);
-            _context.SaveChanges();
+            Debug.WriteLine("There are " + _context.Events.Count() + " events in the database table");
 
             List<Event> events = new List<Event>();
 
-            Random random= new Random();
-
-            for(int i = 0; i < 10; i++)
+            foreach(var myEvent in _context.Events)
             {
-                Event newEvent = new Event();
-                newEvent.Title = $"Some Event {i}";
-                newEvent.Description = "A Description";
-                newEvent.Address = "Some Where :)";
-                newEvent.City = "At Some City";
-                newEvent.ZipCode = "At Some Zipcode";
-                //newEvent.imageURL = "https://media.istockphoto.com/id/1181250359/photo/business-people.jpg?s=612x612&w=0&k=20&c=1DFEPJdcvlhFdQYp-hzj2CYXXRn-b6qYoPgyOptZsck=";
-                newEvent.GeoLocationLatitude = random.NextDouble()*100;
-                newEvent.GeoLocationLatitude = random.NextDouble()*100;
-                events.Add(newEvent);
+                events.Add(myEvent);
             }
 
             return events;
@@ -171,6 +183,28 @@ namespace MeetGreet.Controllers
         /// </summary>
         private async void QueryThroughContext()
         {
+            #region Retrieve Entries In A Database Table
+
+            // Retrieving data from a database is incredibly straightforward.
+            // _context (our local instance of MeetgreetContext) is our portal to the database.
+            // _context contains everything we need to retrieve, create, update, and remove entries.
+
+            // in the example below, we iterate through all entries in the table "Users".
+            foreach(var user in _context.Users)
+            {
+                // We then check to see if an entry contains the email we want.
+                // Note that checking is not limited to just emails, you can check to see if a user contains a certain id, password, etc.
+                if(user.Email == "SomeEmail@gmail.com")
+                {
+                    // After this point, we can do whatever we want. We can return the current "user" variable, add it to a list of users, etc.
+                    Debug.WriteLine("Found SomeEmail@gmail.com email!");
+                }
+            }
+
+
+            #endregion
+
+
             #region Create Entries In a Database Table
             // Creating a new entry for a database is very easy.
             // All that is needed to be done is to instantiate a model, and add data to each fields in the model.
