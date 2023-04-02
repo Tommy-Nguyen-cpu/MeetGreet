@@ -23,6 +23,10 @@
         background-color: white;
         border-style: solid
     }
+
+    .fa-user:hover {
+        color: red;
+    }
 </style>
 
 <!-- "noscript" tag will be displayed if JavaScript is not supported or turned off in a browser. -->
@@ -33,6 +37,7 @@
 </noscript>
 
 <body>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
           integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
           crossorigin="" />
@@ -150,12 +155,17 @@
                                                     <div class="card" style="background-color:lightgray">
                                                         <img src="..." class="card-img-top" alt="...">
                                                         <div class="card-body">
-                                                            <form asp-action="Attendance" method="post">
-                                                                <input type="hidden" asp-for="@Model[j].Id" name="eventID" />
-                                                                <input type="submit" name="Attending" value="Attending" />
-                                                                <input type="submit" name="Interested" value="Interested" />
-                                                                <input type="submit" name="NotAttending" value="Not Attending" />
-                                                            </form>
+                                                            <input type="hidden" asp-for="@Model[j].Id" name="eventID" />
+                                                            @if(Model[j].AttendingIndications.Count == 0)
+                                                            {
+                                                                <a asp-action="Attendance" asp-route-Attending="Attending"><i class="fa fa-user-check fa-beat"></i></a>
+                                                                <a asp-action="Attendance" asp-route-Interested="Interested"><i class="fa fa-user-pen fa-beat"></i></a>
+                                                                <a asp-action="Attendance" asp-route-NotAttending="Not Attending"><i class="fa fa-user-slash fa-beat"></i></a>
+                                                            }
+                                                            else
+                                                            {
+                                                                <p class="alert-success">Sent your indication!</p>
+                                                            }
                                                             <h5 class="card-title">Event Name:@Model[j].Title</h5>
                                                             <p class="card-text">Location: @Model[j].Address, @Model[j].City, @Model[j].ZipCode <br />Geolocation: (@Model[j].GeoLocationLatitude, @Model[j].GeoLocationLongitude)<br />Description: @Model[j].Description</p>
                                                             <a href="#" class="btn btn-primary">Go somewhere</a>
