@@ -33,14 +33,14 @@ namespace MeetGreet.Controllers
             MySqlDataReader reader = command.ExecuteReader();
             while (reader.Read())
             {
-                userEvent.Title = reader.GetValue(10).ToString();
-                userEvent.Description = reader.GetValue(5).ToString();
-                userEvent.ScheduledDateTime = DateTime.Parse(reader.GetValue(9).ToString());
-                userEvent.Address = reader.GetValue(1).ToString();
-                userEvent.City = reader.GetValue(2).ToString();
-                userEvent.ZipCode = reader.GetValue(11).ToString();
+                userEvent.Title = reader.GetValue(1).ToString();
+                userEvent.Description = reader.GetValue(4).ToString();
+                userEvent.ScheduledDateTime = DateTime.Parse(reader.GetValue(10).ToString());
+                userEvent.Address = reader.GetValue(9).ToString();
+                userEvent.City = reader.GetValue(8).ToString();
+                userEvent.ZipCode = reader.GetValue(7).ToString();
                 userEvent.GeoLocationLatitude = Convert.ToDouble(reader.GetValue(6).ToString());
-                userEvent.GeoLocationLongitude = Convert.ToDouble(reader.GetValue(7).ToString());
+                userEvent.GeoLocationLongitude = Convert.ToDouble(reader.GetValue(5).ToString());
             }
 
             reader.Close();
