@@ -29,7 +29,7 @@ Once you have installed the sdk, through the command line, navigate to the downl
    4. dotnet MeetGreet.dll
     
     **NOTE** : If after installing .NET sdk and attempting to run the "dotnet" commands, you receive an error saying that the command "dotnet" cannot be found, run the following command:
-      1. "export PATH="$PATH:$HOME/.dotnet"
+      1. export PATH="$PATH:$HOME/.dotnet
       Then try going through the steps outlined in "Run MeetGreet Through Console" again.
       
 After running "dotnet MeetGreet.dll", a command line window should pop up displaying the following messages:
