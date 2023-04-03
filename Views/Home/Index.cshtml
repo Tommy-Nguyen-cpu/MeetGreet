@@ -169,7 +169,7 @@
                                                             <p class="card-text">Location: @Model[j].Address, @Model[j].City, @Model[j].ZipCode <br />Geolocation: (@Model[j].GeoLocationLatitude, @Model[j].GeoLocationLongitude)<br />Description: @Model[j].Description</p>
                                                             <form method="post" asp-controller="IndividualEvent" asp-action="IndividualEventPage">
                                                                 <input type="hidden" name="eventID" value="@Model[j].Id" />
-                                                                <input type="submit" class="btn btn-primary" value="Go To My Event Page" />
+                                                                <input type="submit" class="btn btn-primary" style="background-color:mediumseagreen" value="Go To My Event Page" />
                                                             </form>
                                                         </div>
                                                     </div>
