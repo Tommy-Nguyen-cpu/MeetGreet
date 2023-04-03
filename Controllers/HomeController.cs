@@ -36,10 +36,8 @@ namespace MeetGreet.Controllers
             connect = connection;
         }
 
-        public async Task<ActionResult> Attendance(int eventID, string? Attending = null, string? Interested = null, string? NotAttending = null)
+        public async Task<ActionResult> Attendance(int? Attending = null, int? Interested = null, int? NotAttending = null)
         {
-
-            Debug.WriteLine("Got to attendance method with eventID: " + eventID);
             Debug.WriteLine("Attending?: " + Attending);
             Debug.WriteLine("Interested?: " + Interested);
             Debug.WriteLine("Not Attending?: " + NotAttending);
@@ -61,15 +59,22 @@ namespace MeetGreet.Controllers
                     }
                 }
 
-                attendance.EventId = eventID;
-
                 // TODO: The value below should be determined based on which button is clicked.
                 if (Attending != null)
+                {
+                    attendance.EventId = (int)Attending;
                     attendance.Status = 0;
+                }
                 else if (Interested != null)
+                {
+                    attendance.EventId = (int)Interested;
                     attendance.Status = 1;
-                else
+                }
+                else if(NotAttending != null)
+                {
+                    attendance.EventId = (int)NotAttending;
                     attendance.Status = 2;
+                }
 
                 _context.Add(attendance);
                 await _context.SaveChangesAsync();
@@ -83,7 +88,6 @@ namespace MeetGreet.Controllers
 
         public ActionResult Index(string? searchString)
         {
-
             // If the user the search bar to search for an event by name, we will query in the context object.
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -100,7 +104,7 @@ namespace MeetGreet.Controllers
             }
 
             // Sends the list of events to the View.
-            return View(GenerateEvents());
+            return View(RetrieveEvents());
         }
 
         public IActionResult Privacy()
@@ -116,14 +120,17 @@ namespace MeetGreet.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-
-        // TODO: TEMP METHOD FOR GENERATING EVENTS UNTIL WE START CREATING LEGITIMATE EVENTS.
-        private List<Event> GenerateEvents()
+        private List<Event> RetrieveEvents()
         {
             Debug.WriteLine("There are " + _context.Events.Count() + " events in the database table");
 
+            // Retrieves the ID of the current user.
+            string? currentUserID = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // Instantiates a list of events.
             List<Event> events = new List<Event>();
 
+            // Iterates through all events in the database.
             foreach(var myEvent in _context.Events)
             {
                 events.Add(myEvent);
