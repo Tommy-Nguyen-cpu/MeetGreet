@@ -167,7 +167,10 @@
                                                             }
                                                             <h5 class="card-title">Event Name:@Model[j].Title</h5>
                                                             <p class="card-text">Location: @Model[j].Address, @Model[j].City, @Model[j].ZipCode <br />Geolocation: (@Model[j].GeoLocationLatitude, @Model[j].GeoLocationLongitude)<br />Description: @Model[j].Description</p>
-                                                            <a href="#" class="btn btn-primary">Go somewhere</a>
+                                                            <form method="post" asp-controller="IndividualEvent" asp-action="IndividualEventPage">
+                                                                <input type="hidden" name="eventID" value="@Model[j].Id" />
+                                                                <input type="submit" class="btn btn-primary" value="Go To My Event Page" />
+                                                            </form>
                                                         </div>
                                                     </div>
                                                 </div>
