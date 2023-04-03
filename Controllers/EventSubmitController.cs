@@ -1,13 +1,6 @@
 ﻿using MeetGreet.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
-using Microsoft.EntityFrameworkCore.Storage;
-using Newtonsoft.Json;
-using NuGet.Protocol;
-using SendGrid;
-using System.Runtime.InteropServices;
-using System.Text.Json.Nodes;
-using static System.Net.Mime.MediaTypeNames;
+
 
 namespace MeetGreet.Controllers
 {
@@ -19,37 +12,49 @@ namespace MeetGreet.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> EventSubmitPage(string userEventName, string userDescription, string userAddress, string userCity, string userZipCode)
+        public async Task<IActionResult> EventSubmitPage(string userEventName, string userDescription, DateTime userDateTime, string userAddress, string userCity, string userZipCode)
         {
             Event userEvent = new Event
             {
                 Title = userEventName,
                 Description = userDescription,
+                ScheduledDateTime = userDateTime,
                 Address = userAddress,
                 City = userCity,
                 ZipCode = userZipCode
             };
-            
-            HttpClient client = new HttpClient();
 
-            HttpResponseMessage response = await client.GetAsync("http://localhost:8080/search/%20" + userAddress + "%20" + userCity + "%20" + userZipCode + "?format=json&limit=1");
-            string httpResponse = await response.Content.ReadAsStringAsync();
-            //thow an expception for improper query to api to prevent improper data being displayed to user in EventSubmitView
-            if(httpResponse == null)
+            double latitude = 0;
+            double longitude = 0;
+
+            //my version of error handling kinda klunky and not the best but very open to change just something quick I came up with
+            try
             {
-                throw new Exception();
+                HttpClient test = new HttpClient();
+
+                test.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36");
+
+                HttpResponseMessage resp = await test.GetAsync("https://nominatim.openstreetmap.org/search/" + userAddress + "%20" + userCity + "%20" + userZipCode + "?format=json&limit=1");
+                string httpResponse = await resp.Content.ReadAsStringAsync();
+                string[] respArray = httpResponse.Split(',', '"');
+
+                latitude = Convert.ToDouble(respArray[34]);
+                longitude = Convert.ToDouble(respArray[39]);
             }
-            string[] testing = httpResponse.Split(',', '"');
-            
-            double latitude = Convert.ToDouble(testing[34]);
-            double longitude = Convert.ToDouble(testing[39]);
+            catch(Exception err)
+            {
+                return View("~/Views/EventCreation/EventCreationPageError.cshtml");
+            }
+
+            userEvent.GeoLocationLatitude = latitude;
+            userEvent.GeoLocationLongitude = longitude;
 
             MapInfo eventMarker = new MapInfo
             {
-                lat = latitude,
-                lon = longitude
+            lat = latitude,
+            lon = longitude
             };
-          
+
             ViewData["MapInfo"] = eventMarker;
             ViewData["Event"] = userEvent;
             return View();

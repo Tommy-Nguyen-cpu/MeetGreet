@@ -1,22 +1,18 @@
-﻿
+﻿<h1>There was an error with your previous request please retype your information and make sure all address details are correct.</h1>
 
 <div class="InfoForm">
     <form method="post" asp-controller="EventSubmit" asp-action="EventSubmitPage">
         <label>Event Name</label>
         <br />
-        <input type="text" placaeholder="Event Name" name="userEventName" required/>
+        <input type="text" placaeholder="Event Name" name="userEventName" required />
         <br />
         <label>Event Description</label>
         <br />
         <textarea name="userDescription" required></textarea>
         <br />
         <label>Event Date and Time</label>
-        <br /> 
-        <input type="datetime-local" name="userDateTime" required/>
         <br />
-        <label>Add an Image Displaying the Event Venu if you Want!</label>
-        <br />
-        <input type="file" name="userPicture" accept="image/jpeg, image/png" multiple />
+        <input type="datetime-local" name="userDateTime" required />
         <br />
         <label>Street Address</label>
         <br />
@@ -33,6 +29,3 @@
         <input type="submit" value="Submit" />
     </form>
 </div>
-
-
-

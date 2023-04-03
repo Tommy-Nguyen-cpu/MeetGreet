@@ -1,0 +1,77 @@
+﻿@using MeetGreet.Models;
+@{
+    var userEventData = ViewData["Event"] as MeetGreet.Models.Event;
+}
+
+
+<h3>@userEventData.ScheduledDateTime</h3>
+<br />
+<h3>@userEventData.Title</h3>
+<br />
+<h3>@userEventData.Description</h3>
+<br />
+<h3>@userEventData.Address</h3>
+<br />
+<h3>@userEventData.City</h3>
+<br />
+<h3>@userEventData.ZipCode</h3>
+<br />
+<h3>@userEventData.GeoLocationLongitude</h3>
+<br />
+<h3>@userEventData.GeoLocationLatitude</h3>
+
+<h1>Welcome to your events page!</h1>
+
+<style>
+    #map {
+        height: 300px;
+    }
+</style>
+
+<!-- "noscript" tag will be displayed if JavaScript is not supported or turned off in a browser. -->
+<noscript>
+    <h1>Your browser does not support JavaScript. Please switch to a different browser or turn JavaScript on.</h1>
+</noscript>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+      integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
+      crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+        integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
+        crossorigin="">
+</script>
+
+<div class="row">
+    <div id="map">
+        <style>
+            img.huechange {
+                filter: hue-rotate(120deg);
+            }
+        </style>
+        <script type="text/javascript">
+            var map = L.map('map').setView([@userEventData.GeoLocationLatitude, @userEventData.GeoLocationLongitude], 15);
+
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            L.marker([@userEventData.GeoLocationLatitude, @userEventData.GeoLocationLongitude]).addTo(map)
+
+        </script>
+    </div>
+</div>
+
+@* attending = 0 interested = 1 not attending = 2*@
+<form method="post" asp-controller="IndividualEvent" asp-action="StatusOfUser">
+    <p>Click here if you are interested in the event!</p>
+    <input type="submit" value="Interested" name="userIntereset" />
+    <br />
+    <p>Click here if you are Attending the event!</p>
+    <input type="submit" value="Attending" name="userIntereset" />
+    <br />
+    <p>Click here if you are not attending this event!</p>
+    <br />
+    <input type="submit" value="Not Attending" name="userIntereset" />  
+</form>
+<button type="submit" value="Interested" name="userInterest">Interested</button>
+<br />
