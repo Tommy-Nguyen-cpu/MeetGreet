@@ -9,6 +9,7 @@ using Amazon.S3;
 using Amazon.S3.Model;
 using Amazon.Extensions.NETCore.Setup;
 using static Amazon.RegionEndpoint;
+using Microsoft.Extensions.Logging;
 
 namespace MeetGreet.Controllers
 {
@@ -48,7 +49,7 @@ namespace MeetGreet.Controllers
                 userEvent.GeoLocationLongitude = Convert.ToDouble(reader.GetValue(5).ToString());
             }
 
-            reader.Close();
+            //reader.Close();
 
             ViewData["Event"] = userEvent;
             return View();
@@ -65,12 +66,12 @@ namespace MeetGreet.Controllers
                 Address = eventAddress,
                 City = eventCity,
                 ZipCode = eventZipCode,
-                GeoLocationLatitude= eventLatitude,
-                GeoLocationLongitude= eventLongitude
+                GeoLocationLatitude = eventLatitude,
+                GeoLocationLongitude = eventLongitude
             };
 
             string? id = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if(id != null)
+            if (id != null)
             {
                 userEvent.CreatedByUserId = id;
                 _context.Add(userEvent);
@@ -80,18 +81,41 @@ namespace MeetGreet.Controllers
 
             uploadEventImages(imageByteString);
 
+            // TO DO: SAVE OBJECT KEY IN SQL DATABASE. SEE CODE ON MEETGREET-INFRA TO FETCH A URL TO DISPLAY IMAGES.
+            // ALSO, NEED TO QUERY DATABASE FOR AWS API KEY.
 
 
             ViewData["Event"] = userEvent;
+
+            ViewData["EventImage"] = new EventImage()
+            {
+                imageBytes = Convert.FromBase64String(imageByteString),
+            };
             return View("~/Views/IndividualEvent/IndividualEventPage.cshtml");
         }
 
         private string BUCKET_NAME = "meetgreet-image-store";
 
+
         private async void uploadEventImages(string byteString)
         {
-            var credentials = new BasicAWSCredentials("", "");
-            IAmazonS3 s3Client = new AmazonS3Client(credentials, Amazon.RegionEndpoint.USEast1);
+            connect.Open();
+            // GET S3 CLIENT FROM SQL
+
+            // Sends a request for API KEYS FOR AWS
+            MySqlCommand command = new MySqlCommand("SELECT * FROM AWSAPIKey WHERE ID=1", connect);
+
+            IAmazonS3 s3Client = new AmazonS3Client();
+
+            // Reads result.
+            MySqlDataReader reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                s3Client = new AmazonS3Client(reader.GetValue(1).ToString(), reader.GetValue(2).ToString(), Amazon.RegionEndpoint.USEast1);
+            }
+
+            reader.Close();
+
             string objectName = generateObjectName();
             byte[] byteArray = Convert.FromBase64String(byteString);
 
