@@ -21,6 +21,7 @@ public partial class MeetgreetContext : IdentityUserContext<User, string, UserCl
 
     public virtual DbSet<Awsapikey> Awsapikeys { get; set; }
     public virtual DbSet<EmailApikey> EmailApikeys { get; set; }
+    public virtual DbSet<Image> Images { get; set; }
     public virtual DbSet<User> Users { get; set; }
 
     public virtual DbSet<UserClaim> UserClaims { get; set; }
@@ -79,6 +80,24 @@ public partial class MeetgreetContext : IdentityUserContext<User, string, UserCl
 
             entity.Property(e => e.AccessKey).HasMaxLength(500);
             entity.Property(e => e.SecretAccessKey).HasMaxLength(500);
+        });
+
+        modelBuilder.Entity<Image>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("Image");
+
+            entity.HasIndex(e => e.EventId, "EventId");
+
+            entity.Property(e => e.S3key)
+                .HasMaxLength(2083)
+                .HasColumnName("S3Key");
+
+            entity.HasOne(d => d.Event).WithMany(p => p.Images)
+                .HasForeignKey(d => d.EventId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("Image_ibfk_1");
         });
 
         modelBuilder.Entity<EmailApikey>(entity =>

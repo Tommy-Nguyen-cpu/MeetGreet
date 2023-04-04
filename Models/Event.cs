@@ -61,4 +61,5 @@ public partial class Event
 
     public virtual ICollection<AttendingIndication> AttendingIndications { get; } = new List<AttendingIndication>();
     public virtual User CreatedByUser { get; set; } = null!;
+    public virtual ICollection<Image> Images { get; } = new List<Image>();
 }
