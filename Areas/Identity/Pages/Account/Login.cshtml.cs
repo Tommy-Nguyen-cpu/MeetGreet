@@ -87,11 +87,15 @@ namespace MeetGreet.Areas.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.PasswordHash, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
+                    // Logs output result (for testing).
                     _logger.LogInformation("User logged in.");
+
+                    // Redirects user to the appropriate page.
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
                 {
+                    // If 2 factor is required, redirect to 2 factor page.
                     return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
                 }
                 if (result.IsLockedOut)

@@ -19,6 +19,8 @@ public partial class MeetgreetContext : IdentityUserContext<User, string, UserCl
 
     public virtual DbSet<AttendingIndication> AttendingIndications { get; set; }
 
+    public virtual DbSet<Awsapikey> Awsapikeys { get; set; }
+    public virtual DbSet<EmailApikey> EmailApikeys { get; set; }
     public virtual DbSet<User> Users { get; set; }
 
     public virtual DbSet<UserClaim> UserClaims { get; set; }
@@ -66,6 +68,28 @@ public partial class MeetgreetContext : IdentityUserContext<User, string, UserCl
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("AttendingIndication_ibfk_1");
+        });
+
+
+        modelBuilder.Entity<Awsapikey>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("AWSAPIKey");
+
+            entity.Property(e => e.AccessKey).HasMaxLength(500);
+            entity.Property(e => e.SecretAccessKey).HasMaxLength(500);
+        });
+
+        modelBuilder.Entity<EmailApikey>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("EmailAPIKey");
+
+            entity.Property(e => e.Apikey)
+                .HasMaxLength(255)
+                .HasColumnName("APIKey");
         });
 
         modelBuilder.Entity<User>(entity =>

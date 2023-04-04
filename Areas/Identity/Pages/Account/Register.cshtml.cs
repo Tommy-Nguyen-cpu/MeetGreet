@@ -22,6 +22,7 @@ using Microsoft.Extensions.Logging;
 using SendGrid.Helpers.Mail;
 using SendGrid;
 using MeetGreet.EmailClasses;
+using MeetGreet.Data;
 
 namespace MeetGreet.Areas.Identity.Pages.Account
 {
@@ -33,13 +34,14 @@ namespace MeetGreet.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<User> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly MeetgreetContext _context;
 
         public RegisterModel(
             UserManager<User> userManager,
             IUserStore<User> userStore,
             SignInManager<User> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender, MeetgreetContext context)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -47,6 +49,7 @@ namespace MeetGreet.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _context = context;
         }
 
         /// <summary>
@@ -137,7 +140,7 @@ namespace MeetGreet.Areas.Identity.Pages.Account
                         protocol: Request.Scheme);
 
                     EmailClass emailClass = new EmailClass();
-                    await emailClass.SendEmail(user.Email, $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    await emailClass.SendEmail(user.Email, $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.", _context);
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
                         return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
