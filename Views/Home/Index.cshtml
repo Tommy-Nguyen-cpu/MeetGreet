@@ -65,6 +65,8 @@
             <script type="text/javascript">
 
                 getLocation();
+
+                // getLocation retrieves users current location.
                 function getLocation() {
                     if (navigator.geolocation) {
                         navigator.geolocation.getCurrentPosition(showPosition);
@@ -72,7 +74,7 @@
                         // TODO: Figure out how we'll add HTML tags through JavaScript.
                     }
                 }
-
+                // Added custom user location marker.
                 var UserIcon = L.Icon.extend({
                    options: {
                         iconUrl: '/MapImages/UserIconImage.png',
@@ -93,24 +95,27 @@
 
                     // Code below checks to see if the event is within range. If the event is within range of the user, the event will be displayed.
                     // Otherwise, the event will not.
-                    // TODO: Find a way of removing the event from the "array" if it is not within range.
-                    // TODO: We'll also want to switch the ordering of the check (check to see if user is within acceptable range).
                     var arr = @Json.Serialize(Model);
                     for (obj of arr) {
+
+                        // If hosts specified a radius.
                         if(obj.radius != null){
+
+                            // If user is within range, display event markers.
                             if (obj.geoLocationLatitude + obj.radius <= position.coords.latitude && obj.geoLocationLatitude - obj.radius >= position.coords.latitude && obj.geoLocationLongitude + obj.radius <= position.coords.longitude && obj.geoLocationLongitude - obj.radius >= position.coords.longitude) {
                                 var marker = L.marker([obj.geoLocationLatitude, obj.geoLocationLongitude], { html: "<span style='background-color:#00FF00'>" }).addTo(map).bindPopup('Event: ' + obj.title).openPopup();
                                 marker._icon.classList.add("huechange");
 
                             }
                         }
+                        // If radius is null, then all users will be able to see the event.
                         else{
                             var marker = L.marker([obj.geoLocationLatitude, obj.geoLocationLongitude], { html: "<span style='background-color:#00FF00'>" }).addTo(map).bindPopup('Event: ' + obj.title).openPopup();
                             marker._icon.classList.add("huechange");
                         }
                     }
 
-
+                    // Add copyright label for OpenStreetMap.
                     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     }).addTo(map);
@@ -145,7 +150,7 @@
                             }
                             <div class="carousel-item @start">
                                 <div class="row">
-
+                                 <!-- Dynamically create cards for events in the model. -->
                                     @for (int j = i; j < i + 4; j++)
                                     {
                                         @if (j < Model.Count)
@@ -155,6 +160,7 @@
                                                     <div class="card" style="background-color:lightgray">
                                                         <img src="..." class="card-img-top" alt="...">
                                                         <div class="card-body">
+                                                        <!-- TODO: Was originally going to add a comment for when users already indicated their attendance for an event, but its too performance heavy. -->
                                                             @if(Model[j].AttendingIndications.Count == 0)
                                                             {
                                                                 <a asp-action="Attendance" asp-route-Attending="@Model[j].Id"><i class="fa fa-user-check fa-beat"></i></a>
