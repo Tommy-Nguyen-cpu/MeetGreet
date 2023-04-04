@@ -42,24 +42,17 @@ namespace MeetGreet.Controllers
             Debug.WriteLine("Interested?: " + Interested);
             Debug.WriteLine("Not Attending?: " + NotAttending);
 
+            // Retrieves the ID of the current logged in user.
             string? id = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
+            // ID shouldn't be null, but may be null in some exceptional cases.
             if(!string.IsNullOrEmpty(id) )
             {
 
                 AttendingIndication attendance = new AttendingIndication();
                 attendance.UserId = id;
 
-                foreach (var myUser in _context.Users)
-                {
-                    if (myUser.Id.Contains(id))
-                    {
-                        attendance.User= myUser;
-                        break;
-                    }
-                }
-
-                // TODO: The value below should be determined based on which button is clicked.
+                // Depending on which icon the user clicks on, the corresponding "attending", "interested", or "not attending" will be stored in the DB.
                 if (Attending != null)
                 {
                     attendance.EventId = (int)Attending;

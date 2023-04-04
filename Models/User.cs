@@ -7,6 +7,9 @@ namespace MeetGreet.Models;
 
 public partial class User : IdentityUser
 {
+    /// <summary>
+    /// Primary key in DB table.
+    /// </summary>
     public override string Id { get; set; } = null!;
 
     // IdentityUser requires this column. Currently, it is different from email, but if we ever decide to allow usernames other than email, we can implement it.
@@ -27,6 +30,9 @@ public partial class User : IdentityUser
     [Display(Name = "Password")]
     public override string? PasswordHash { get; set; }
 
+    /// <summary>
+    /// Used to manage consistent login.
+    /// </summary>
     [Display(Name = "Remember Me?")]
     public bool RememberMe { get; set; }
 
