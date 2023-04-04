@@ -1,12 +1,12 @@
-﻿@using MeetGreet.Models
+﻿<!-- Import data passed in from controller -->
+@using MeetGreet.Models
 @{
     ViewBag.Title = "EventSubmitPage";
-    var data = ViewData["Addresses"] as MeetGreet.Models.Addresses;
-    //var beattyHalls = ViewData["BeattyHalls"] as MeetGreet.Models.Addresses;
+    //var data = ViewData["Addresses"] as MeetGreet.Models.Addresses;
     var userEventData = ViewData["Event"] as MeetGreet.Models.Event;
     var eventMarker = ViewData["MapInfo"] as MeetGreet.Models.MapInfo;
 }
-
+<!-- Display event info to user-->
 <h1>Please review the information below before submitting your event.</h1>
 
 <p>Your events title: @userEventData.Title</p>
@@ -14,7 +14,7 @@
 <p>Your events scheduled date and time: @userEventData.ScheduledDateTime</p>
 <p>Your events Address: @userEventData.Address @userEventData.City, @userEventData.ZipCode</p>
 <br />
-
+<!--Map Setup-->
 <style>
     #map {
         height: 300px;
@@ -42,6 +42,7 @@
             }
         </style>
         <script type="text/javascript">
+            //Access model to get the event longitude and latidude so they can be displayed
             var map = L.map('map').setView([@eventMarker.lat, @eventMarker.lon], 15);
 
             L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -55,12 +56,15 @@
 </div>
 
 <div id="buttons">
+    <!--If something wrong form redirects user back to Event Creation Page-->
     <p>Something wrong? Click "Go Back and retry the event creation. If not click "Submit" to submit your event. </p>
     <form asp-controller="EventCreation" asp-action="EventCreationPage">
         <input type="submit" value="Go Back" style="display: inline;" />
     </form> 
 
-    
+    <!--If there is nothing wrong then the data is passed to the Individual Event Controller and the SubmitToSQL action. The form is hidden
+        so that the user cannot see it but the data will still be passed.
+    -->
     <form method="post" asp-controller="IndividualEvent" asp-action="SubmitToSQL">
         @* needs to be passed in as text becuase having type="datetime-local" sets the value back to default (01/01/001 12:00AM) *@
         <input hidden type="text" name="eventDate" value="@userEventData.ScheduledDateTime" />
@@ -74,8 +78,3 @@
         <input type="submit" style="display: inline;"/>
     </form>
 </div>
-
-<form asp-controller="IndividualEvent" asp-action="IndividualEventPage">
-    <input type="text" name="eventID" placeholder="Enter an Event ID"/>
-    <input type="submit" />
-</form>
