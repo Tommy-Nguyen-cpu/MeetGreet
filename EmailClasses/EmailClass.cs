@@ -1,15 +1,15 @@
 ﻿using SendGrid.Helpers.Mail;
 using SendGrid;
+using MeetGreet.Models;
+using MeetGreet.Data;
 
 namespace MeetGreet.EmailClasses
 {
     public class EmailClass
     {
-
-        private readonly string apiKey = "can't push email api key";
-        public async Task SendEmail(string receipientEmail, string htmlBody)
+        public async Task SendEmail(string receipientEmail, string htmlBody, MeetgreetContext context)
         {
-            var client = new SendGridClient(apiKey);
+            var client = new SendGridClient(context.EmailApikeys.First().Apikey);
             var from = new EmailAddress("MeetGreetWIT@outlook.com", "MeetGreetNotification");
             var subject = "MeetGreet Email Confirmation";
             var to = new EmailAddress(receipientEmail);
