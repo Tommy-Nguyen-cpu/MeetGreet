@@ -4,6 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 using MySqlConnector;
 using System.Security.Claims;
 using System;
+using Amazon.Runtime;
+using Amazon.S3;
+using Amazon.S3.Model;
+using Amazon.Extensions.NETCore.Setup;
+using static Amazon.RegionEndpoint;
 
 namespace MeetGreet.Controllers
 {
@@ -50,7 +55,7 @@ namespace MeetGreet.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SubmitToSQL(DateTime eventDate, string eventTitle, string eventDescription, string eventAddress, string eventCity, string eventZipCode, double eventLatitude, double eventLongitude)
+        public async Task<IActionResult> SubmitToSQL(DateTime eventDate, string eventTitle, string eventDescription, string eventAddress, string eventCity, string eventZipCode, double eventLatitude, double eventLongitude, string imageByteString, string eventImageName)
         {
             Event userEvent = new Event
             {
@@ -72,8 +77,70 @@ namespace MeetGreet.Controllers
                 _context.SaveChanges();
             }
 
+
+            uploadEventImages(imageByteString);
+
+
+
             ViewData["Event"] = userEvent;
             return View("~/Views/IndividualEvent/IndividualEventPage.cshtml");
         }
+
+        private string BUCKET_NAME = "meetgreet-image-store";
+
+        private async void uploadEventImages(string byteString)
+        {
+            var credentials = new BasicAWSCredentials("", "");
+            IAmazonS3 s3Client = new AmazonS3Client(credentials, Amazon.RegionEndpoint.USEast1);
+            string objectName = generateObjectName();
+            byte[] byteArray = Convert.FromBase64String(byteString);
+
+            await UploadFileAsync(s3Client, BUCKET_NAME, objectName, "", byteArray);
+        }
+
+        private string generateObjectName()
+        {
+            return DateTime.Now.ToString("yyMMdd") + DateTime.Now.ToString("HH:mm:ss") + "-" + Guid.NewGuid().ToString();
+        }
+
+        /// <param name="client">An initialized Amazon S3 client object.</param>
+        /// <param name="bucketName">The Amazon S3 bucket to which the object
+        /// will be uploaded.</param>
+        /// <param name="objectName">The object to upload.</param>
+        /// <param name="filePath">The path, including file name, of the object
+        /// on the local computer to upload.</param>
+        /// <returns>A boolean value indicating the success or failure of the
+        /// upload procedure.</returns>
+        private static async Task<bool> UploadFileAsync(
+            IAmazonS3 client,
+            string bucketName,
+            string objectName,
+            string filePath,
+            byte[] imageBytes)
+        {
+            var request = new PutObjectRequest
+            {
+                BucketName = bucketName,
+                Key = objectName,
+                FilePath = filePath,
+            };
+            using (var ms = new MemoryStream(imageBytes))
+            {
+                request.InputStream = ms;
+
+                var response = await client.PutObjectAsync(request);
+                if (response.HttpStatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    Console.WriteLine($"Successfully uploaded {objectName} to {bucketName}.");
+                    return true;
+                }
+                else {
+                    Console.WriteLine($"Could not upload {objectName} to {bucketName}.");
+                    Console.WriteLine($"{response.ToString}");
+                    return false;
+                }
+            }
+        }
+
     }
 }

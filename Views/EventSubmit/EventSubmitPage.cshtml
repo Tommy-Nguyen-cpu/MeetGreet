@@ -74,7 +74,8 @@
         <input hidden type="text" name="eventZipCode" value="@userEventData.ZipCode" />
         <input hidden type="number" name="eventLatitude" value="@userEventData.GeoLocationLatitude" />
         <input hidden type="number" name="eventLongitude" value="@userEventData.GeoLocationLongitude" />
-        <input hidden type="text" name="imageByteArray" value="@eventImage.imageBytes" />
+        <input hidden type="text" name="imageByteString" value="@System.Convert.ToBase64String(@eventImage.imageBytes)" />
+        <input hidden type="text" name="eventImageName" value="@eventImage.imageFileForm.FileName" />
         <input type="submit" style="display: inline;" />
     </form>
 </div>
