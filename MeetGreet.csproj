@@ -42,6 +42,10 @@
 
   <ItemGroup>
     <Folder Include="Data\" />
+    <Folder Include="AmazonS3HelperClasses\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="S3HelperClasses\" />
+  </ItemGroup>
 </Project>
