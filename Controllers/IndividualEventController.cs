@@ -11,6 +11,8 @@ using Amazon.Extensions.NETCore.Setup;
 using static Amazon.RegionEndpoint;
 using Microsoft.Extensions.Logging;
 using NuGet.Protocol.Core.Types;
+using MeetGreet.AmazonS3HelperClasses;
+using System.Security.AccessControl;
 
 namespace MeetGreet.Controllers
 {
@@ -19,12 +21,15 @@ namespace MeetGreet.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly MeetgreetContext _context;
         private readonly MySqlConnection connect;
+        private readonly AmazonS3Helper s3Helper;
 
-        public IndividualEventController(ILogger<HomeController> logger, MeetgreetContext context, MySqlConnection connection)
+        public IndividualEventController(ILogger<HomeController> logger, MeetgreetContext context, MySqlConnection connection, AmazonS3Helper amazonS3Helper)
         {
             _logger = logger;
             _context = context;
             connect = connection;
+
+            s3Helper = amazonS3Helper;
         }
 
         [HttpPost]
@@ -102,6 +107,8 @@ namespace MeetGreet.Controllers
             };
             _context.Add(image);
             _context.SaveChanges();
+
+            Console.WriteLine($"TEST PRESIGNED URL: {s3Helper.retrieveS3BucketImageURL(s3Key)}");
         }
 
 
