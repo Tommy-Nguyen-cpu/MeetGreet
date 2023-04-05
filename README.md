@@ -16,7 +16,7 @@ In order to run MeetGreet, you must install ".NET SDK". You can install ".NET SD
  
  ![PathToDotNetScript](https://user-images.githubusercontent.com/75864631/230197968-9189912b-b7b3-47e8-9b81-83fcaf87efe3.jpg)
  
- ** Note - the following commands will look different based on where you downloaded the zip file. **
+ ** Note - the following commands will look different based on where you downloaded the zip file. The following file path is based on the screenshot above. **
 
     
     2.1.1.  Run the following commands:
