@@ -79,11 +79,7 @@ namespace MeetGreet.Controllers
                 _context.SaveChanges();
             }
 
-            Console.WriteLine("EVENT ID: " + userEvent.Id);
-
             await uploadEventImages(imageByteString, userEvent);
-
-
 
             ViewData["Event"] = userEvent;
             ViewData["EventImage"] = new EventImage()
