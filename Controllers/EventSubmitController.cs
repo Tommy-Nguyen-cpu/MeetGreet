@@ -1,5 +1,7 @@
 ﻿using MeetGreet.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 
 namespace MeetGreet.Controllers
@@ -12,8 +14,21 @@ namespace MeetGreet.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> EventSubmitPage(string userEventName, string userDescription, DateTime userDateTime, string userAddress, string userCity, string userZipCode)
+        public async Task<IActionResult> EventSubmitPage(string userEventName, string userDescription, DateTime userDateTime, IFormFile imageFileForm, string userAddress, string userCity, string userZipCode)
         {
+            EventImage eventImage = new EventImage()
+            {
+                imageFileForm = imageFileForm
+            };
+
+            using (var memoryStream = new MemoryStream())
+            {
+                await imageFileForm.CopyToAsync(memoryStream);
+                eventImage.imageBytes = memoryStream.GetBuffer();
+                
+            }
+
+
             Event userEvent = new Event
             {
                 Title = userEventName,
@@ -26,6 +41,7 @@ namespace MeetGreet.Controllers
 
             double latitude = 0;
             double longitude = 0;
+
 
             //my version of error handling kinda klunky and not the best but very open to change just something quick I came up with
             try
@@ -41,7 +57,7 @@ namespace MeetGreet.Controllers
                 latitude = Convert.ToDouble(respArray[34]);
                 longitude = Convert.ToDouble(respArray[39]);
             }
-            catch(Exception err)
+            catch (Exception err)
             {
                 return View("~/Views/EventCreation/EventCreationPageError.cshtml");
             }
@@ -51,12 +67,13 @@ namespace MeetGreet.Controllers
 
             MapInfo eventMarker = new MapInfo
             {
-            lat = latitude,
-            lon = longitude
+                lat = latitude,
+                lon = longitude
             };
 
             ViewData["MapInfo"] = eventMarker;
             ViewData["Event"] = userEvent;
+            ViewData["EventImage"] = eventImage;
             return View();
         }
     }

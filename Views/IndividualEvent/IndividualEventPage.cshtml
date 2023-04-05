@@ -1,10 +1,13 @@
 ﻿@using MeetGreet.Models;
 @{
     var userEventData = ViewData["Event"] as MeetGreet.Models.Event;
+    var eventImage = ViewData["EventImage"] as MeetGreet.Models.EventImage;
 }
 
 
 <h3>@userEventData.ScheduledDateTime</h3>
+<br />
+<h3><img src="data:image;base64,@System.Convert.ToBase64String(@eventImage.imageBytes)" style="height:300px; width:300px;" /></h3>
 <br />
 <h3>@userEventData.Title</h3>
 <br />
@@ -38,8 +41,7 @@
       crossorigin="" />
 <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
         integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
-        crossorigin="">
-</script>
+        crossorigin=""></script>
 
 <div class="row">
     <div id="map">
