@@ -7,7 +7,7 @@ Download and extract the MeetGreet repository.
 In order to run MeetGreet, you must install ".NET SDK". You can install ".NET SDK" via the following methods:
 
 ## .NET SDK Installation Instructions For Windows Users
-1. Install the SDK from the following link: https://dotnet.microsoft.com/en-us/download/visual-studio-sdks. After words, follow the instructions once the sdk has completed downloading.
+1. Install the SDK from the following link: https://dotnet.microsoft.com/en-us/download/visual-studio-sdks. Once the sdk has completed downloading follow the steps listed under "Run MeetGreet Through Console" bellow.
 
 ## .NET SDK Installation Instructions For MACOS/Linux Users
 2. Follow the steps laid out in section "2.1" to install via command prompt.
