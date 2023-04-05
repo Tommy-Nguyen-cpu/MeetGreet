@@ -10,6 +10,7 @@ using Amazon.S3.Model;
 using Amazon.Extensions.NETCore.Setup;
 using static Amazon.RegionEndpoint;
 using Microsoft.Extensions.Logging;
+using NuGet.Protocol.Core.Types;
 
 namespace MeetGreet.Controllers
 {
@@ -78,26 +79,37 @@ namespace MeetGreet.Controllers
                 _context.SaveChanges();
             }
 
+            Console.WriteLine("EVENT ID: " + userEvent.Id);
 
-            uploadEventImages(imageByteString);
+            await uploadEventImages(imageByteString, userEvent);
 
-            // TO DO: SAVE OBJECT KEY IN SQL DATABASE. SEE CODE ON MEETGREET-INFRA TO FETCH A URL TO DISPLAY IMAGES.
-            // ALSO, NEED TO QUERY DATABASE FOR AWS API KEY.
 
 
             ViewData["Event"] = userEvent;
-
             ViewData["EventImage"] = new EventImage()
             {
                 imageBytes = Convert.FromBase64String(imageByteString),
             };
+
             return View("~/Views/IndividualEvent/IndividualEventPage.cshtml");
         }
 
         private string BUCKET_NAME = "meetgreet-image-store";
 
 
-        private async void uploadEventImages(string byteString)
+        private async void saveImageToDatabase(Event userEvent, String s3Key)
+        {
+            Image image = new Image()
+            {
+                EventId = userEvent.Id,
+                S3key = s3Key
+            };
+            _context.Add(image);
+            _context.SaveChanges();
+        }
+
+
+        private async Task<Boolean> uploadEventImages(string byteString, Event userEvent)
         {
             connect.Open();
             // GET S3 CLIENT FROM SQL
@@ -119,7 +131,15 @@ namespace MeetGreet.Controllers
             string objectName = generateObjectName();
             byte[] byteArray = Convert.FromBase64String(byteString);
 
-            await UploadFileAsync(s3Client, BUCKET_NAME, objectName, "", byteArray);
+            if(await UploadFileAsync(s3Client, BUCKET_NAME, objectName, "", byteArray))
+            {
+                saveImageToDatabase(userEvent, objectName);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         private string generateObjectName()
