@@ -20,7 +20,7 @@ In order to run MeetGreet, you must install ".NET SDK". You can install ".NET SD
 
     
     2.1.1.  Run the following commands:
-    2.1.2. cd {The name of the exported folder}
+    2.1.2. cd /Documents/GitHub/MeetGreet
     2.1.2. chmod +x ./dotnet-install.sh
     2.1.3. ./dotnet-install.sh
     2.1.4. cd ../../
