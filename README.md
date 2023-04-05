@@ -23,14 +23,14 @@ In order to run MeetGreet, you must install ".NET SDK". You can install ".NET SD
     2.1.2. C:> cd /Documents/GitHub/MeetGreet
     2.1.2. C:/Documents/GitHub/MeetGreet> chmod +x ./dotnet-install.sh
     2.1.3. C:/Documents/GitHub/MeetGreet> ./dotnet-install.sh
-    2.1.4. C:/Documents/GitHub/MeetGreet> cd ../../
 
 # Run MeetGreet Through Console
 Once you have installed the sdk, through the command line, navigate to the downloaded and extracted "MeetGreet" folder and run the following commands in this order: 
-   1. dotnet build
-   2. dotnet publish -o Release
-   3. cd Release
-   4. dotnet MeetGreet.dll
+** Note - the following filepath is based on the screenshot above. Your filepath may look different based on where you downloaded our zip folder. **
+   1. C:/Documents/GitHub/MeetGreet> dotnet build
+   2. C:/Documents/GitHub/MeetGreet> dotnet publish -o Release
+   3. C:/Documents/GitHub/MeetGreet> cd Release
+   4. C:/Documents/GitHub/MeetGreet/Release> dotnet MeetGreet.dll
     
     **NOTE** : If after installing .NET sdk and attempting to run the "dotnet" commands, you receive an error saying that the command "dotnet" cannot be found, run the following command:
       1. export PATH="$PATH:$HOME/.dotnet
