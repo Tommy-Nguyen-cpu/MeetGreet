@@ -12,11 +12,13 @@ In order to run MeetGreet, you must install ".NET SDK". You can install ".NET SD
 ## .NET SDK Installation Instructions For MACOS/Linux Users
 2. Follow the steps laid out in section "2.1" to install via command prompt.
 
-  2.1. For Linux/MacOS users, the script to install .NET SDK can be found in "Linux & MacOS" folder.
-  
-  ![PathToMacScript](https://user-images.githubusercontent.com/75864631/228932990-61c6570a-dc63-41c2-8de2-d24392199139.PNG)
+  2.1. For Linux/MacOS users, the script to install .NET SDK can be in the "MeetGreet" folder, which is the extracted folder.
+ 
+ ![PathToDotNetScript](https://user-images.githubusercontent.com/75864631/230197968-9189912b-b7b3-47e8-9b81-83fcaf87efe3.jpg)
+
     
-    2.1.1. "cd" into the "Linux & MacOS" folder and run the following commands:
+    2.1.1.  Run the following commands:
+    2.1.2. cd **{The name of the exported folder}**
     2.1.2. chmod +x ./dotnet-install.sh
     2.1.3. ./dotnet-install.sh
     2.1.4. cd ../../
