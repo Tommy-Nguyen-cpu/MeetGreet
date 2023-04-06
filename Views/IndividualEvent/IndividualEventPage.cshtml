@@ -2,25 +2,12 @@
 @{
     var userEventData = ViewData["Event"] as MeetGreet.Models.Event;
 }
-
-
-<h3>@userEventData.ScheduledDateTime</h3>
+<!-- Display event info to user-->
+<h1>@userEventData.Title</h1>
+<p>Event description: @userEventData.Description</p>
+<p>Event scheduled date and time: @userEventData.ScheduledDateTime</p>
+<p>Events Address: @userEventData.Address @userEventData.City, @userEventData.ZipCode</p>
 <br />
-<h3>@userEventData.Title</h3>
-<br />
-<h3>@userEventData.Description</h3>
-<br />
-<h3>@userEventData.Address</h3>
-<br />
-<h3>@userEventData.City</h3>
-<br />
-<h3>@userEventData.ZipCode</h3>
-<br />
-<h3>@userEventData.GeoLocationLongitude</h3>
-<br />
-<h3>@userEventData.GeoLocationLatitude</h3>
-
-<h1>Welcome to your events page!</h1>
 
 <style>
     #map {
