@@ -30,6 +30,9 @@ namespace MeetGreet.Areas.Identity.Pages.Account.Manage
         // Events that they'll attend.
         public List<Event> AttendingEvents { get; set; } = new List<Event>();
 
+        // Number of attendees per event.
+        public Dictionary<int, int> NumberOfAttendancePerEvents { get; set; } = new Dictionary<int, int>();
+
         public MyEvents(UserManager<User> userManager, SignInManager<User> signInManager, MeetgreetContext context, IHttpContextAccessor httpContextAccessor)
         {
             _userManager = userManager;
@@ -45,6 +48,15 @@ namespace MeetGreet.Areas.Identity.Pages.Account.Manage
                 if (myEvent.CreatedByUserId.ToLower().Equals(id.ToLower()))
                 {
                     HostedEvents.Add(myEvent);
+
+                    NumberOfAttendancePerEvents.Add(myEvent.Id, 0);
+                    foreach(var attendance in _context.AttendingIndications)
+                    {
+                        if(attendance.EventId == myEvent.Id)
+                        {
+                            NumberOfAttendancePerEvents[myEvent.Id]++;
+                        }
+                    }
                 }
             }
 
