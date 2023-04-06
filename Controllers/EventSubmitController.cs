@@ -17,6 +17,19 @@ namespace MeetGreet.Controllers
         [HttpPost]
         public async Task<IActionResult> EventSubmitPage(string userEventName, string userDescription, DateTime userDateTime, IFormFile imageFileForm, string userAddress, string userCity, string userZipCode)
         {
+
+            EventImage eventImage = new EventImage()
+            {
+                imageFileForm = imageFileForm
+            };
+
+            using (var memoryStream = new MemoryStream())
+            {
+                await imageFileForm.CopyToAsync(memoryStream);
+                eventImage.imageBytes = memoryStream.GetBuffer();
+
+            }
+            
             //takes params and assigns it to event model
             Event userEvent = new Event
             {
