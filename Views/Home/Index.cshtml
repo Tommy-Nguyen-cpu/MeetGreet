@@ -70,9 +70,10 @@
                 // getLocation retrieves users current location.
                 function getLocation() {
                     if (navigator.geolocation) {
-                        navigator.geolocation.getCurrentPosition(showPosition);
+                        navigator.geolocation.getCurrentPosition(showPosition, showError);
                     } else {
-                        // TODO: Figure out how we'll add HTML tags through JavaScript.
+                        // Alert user if no location services
+                        alert("We cannot get your location! Please allow us to access your location!");
                     }
                 }
                 // Added custom user location marker.
@@ -87,6 +88,11 @@
                         popupAnchor: new L.Point(0, -18)
                       }
                     });
+                
+                //will throw error if user does not allow location services
+                function showError(error){
+                    alert("We cannot get your location! Please allow us to access your location!")
+                }
 
                 function showPosition(position) {
 
