@@ -1,6 +1,7 @@
 ﻿@model List<MeetGreet.Models.Event>
 @{
     ViewBag.Title = "Home Page";
+    var images = ViewData["Images"] as Dictionary<int, string>;
 }
 
 <meta charset="utf-8">
@@ -158,7 +159,7 @@
                                             <div class="col">
                                                 <div class="cards-wrapper">
                                                     <div class="card" style="background-color:lightgray">
-                                                        <img src="..." class="card-img-top" alt="...">
+                                                        <img src="@images[Model[j].Id]" class="card-img-top" alt="...">
                                                         <div class="card-body">
                                                         <!-- TODO: Was originally going to add a comment for when users already indicated their attendance for an event, but its too performance heavy. -->
                                                             @if(Model[j].AttendingIndications.Count == 0)
