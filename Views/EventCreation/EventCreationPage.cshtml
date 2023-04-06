@@ -1,21 +1,23 @@
-﻿<!--A Simple form that posts all of the data to the event submit page-->
+<!--A Simple form that posts all of the data to the event submit page-->
+@model MeetGreet.Models.EventImage;
+
 <div class="InfoForm">
-    <form method="post" asp-controller="EventSubmit" asp-action="EventSubmitPage">
+    <form method="post" asp-controller="EventSubmit" asp-action="EventSubmitPage" enctype="multipart/form-data">
         <label>Event Name</label>
         <br />
-        <input type="text" placaeholder="Event Name" name="userEventName" required/>
+        <input type="text" placaeholder="Event Name" name="userEventName" required />
         <br />
         <label>Event Description</label>
         <br />
         <textarea name="userDescription" required></textarea>
         <br />
         <label>Event Date and Time</label>
-        <br /> 
-        <input type="datetime-local" name="userDateTime" required/>
         <br />
-        <label>Add an Image Displaying the Event Venu if you Want!</label>
+        <input type="datetime-local" name="userDateTime" required />
         <br />
-        <input type="file" name="userPicture" accept="image/jpeg, image/png" multiple />
+        <label>Add an Image Displaying the Event Venu</label>
+        <br />
+        <input asp-for="imageFileForm" type="file" accept="image/jpeg, image/png" required />
         <br />
         <label>Street Address</label>
         <br />
@@ -29,7 +31,7 @@
         <br>
         <input type="number" name="userZipCode" required />
         <br />
-        <input type="submit" value="Submit" />
+        <input type="submit" value="Upload" />
     </form>
 </div>
 

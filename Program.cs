@@ -1,3 +1,4 @@
+using MeetGreet.AmazonS3HelperClasses;
 using MeetGreet.Data;
 using MeetGreet.Models;
 using Microsoft.AspNetCore.Identity;
@@ -17,6 +18,8 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<MeetgreetContext>();
+
+builder.Services.AddScoped<AmazonS3Helper>();
 
 // TODO: Should prevent the cycle issue. Test to see if this fixes it.
 builder.Services.AddControllersWithViews().AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);

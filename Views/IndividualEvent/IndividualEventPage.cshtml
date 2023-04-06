@@ -1,12 +1,17 @@
 ﻿@using MeetGreet.Models;
 @{
     var userEventData = ViewData["Event"] as MeetGreet.Models.Event;
+    var imageURL = ViewData["ImageURL"] as string;
 }
-<!-- Display event info to user-->
-<h1>@userEventData.Title</h1>
-<p>Event description: @userEventData.Description</p>
-<p>Event scheduled date and time: @userEventData.ScheduledDateTime</p>
-<p>Events Address: @userEventData.Address @userEventData.City, @userEventData.ZipCode</p>
+
+
+<h3>@userEventData.ScheduledDateTime</h3>
+<br />
+<h3><img src="@imageURL" style="height:300px; width:300px;" /></h3>
+<br />
+<h3>@userEventData.Title</h3>
+<br />
+<h3>@userEventData.Description</h3>
 <br />
 
 <style>
@@ -25,8 +30,7 @@
       crossorigin="" />
 <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
         integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
-        crossorigin="">
-</script>
+        crossorigin=""></script>
 
 <div class="row">
     <div id="map">

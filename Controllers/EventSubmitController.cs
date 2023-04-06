@@ -1,5 +1,7 @@
 ﻿using MeetGreet.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 
 namespace MeetGreet.Controllers
@@ -13,7 +15,7 @@ namespace MeetGreet.Controllers
          * map for the user. 
          */
         [HttpPost]
-        public async Task<IActionResult> EventSubmitPage(string userEventName, string userDescription, DateTime userDateTime, string userAddress, string userCity, string userZipCode)
+        public async Task<IActionResult> EventSubmitPage(string userEventName, string userDescription, DateTime userDateTime, IFormFile imageFileForm, string userAddress, string userCity, string userZipCode)
         {
             //takes params and assigns it to event model
             Event userEvent = new Event
@@ -34,6 +36,7 @@ namespace MeetGreet.Controllers
              * This will handel any errors in case the user entered the address incorrectly. If there is an error with the API call
              * it is caught and the user is redirected to an Event Creation Page with an error. 
              */
+            //my version of error handling kinda klunky and not the best but very open to change just something quick I came up with
             try
             {
                 HttpClient httpClient = new HttpClient();
@@ -49,8 +52,7 @@ namespace MeetGreet.Controllers
                 latitude = Convert.ToDouble(respArray[34]);
                 longitude = Convert.ToDouble(respArray[39]);
             }
-            //If any error redirect to error page
-            catch(Exception err)
+            catch (Exception err)
             {
                 return View("~/Views/EventCreation/EventCreationPageError.cshtml");
             }
@@ -60,12 +62,13 @@ namespace MeetGreet.Controllers
             //pass longitude and latitude into their own model
             MapInfo eventMarker = new MapInfo
             {
-            lat = latitude,
-            lon = longitude
+                lat = latitude,
+                lon = longitude
             };
             //pass data onto the EventSubmitView
             ViewData["MapInfo"] = eventMarker;
             ViewData["Event"] = userEvent;
+            ViewData["EventImage"] = eventImage;
             return View();
         }
     }

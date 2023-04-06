@@ -1,11 +1,14 @@
 ﻿<!-- Import data passed in from controller -->
 @using MeetGreet.Models
 @{
-    ViewBag.Title = "EventSubmitPage";
-    //var data = ViewData["Addresses"] as MeetGreet.Models.Addresses;
-    var userEventData = ViewData["Event"] as MeetGreet.Models.Event;
-    var eventMarker = ViewData["MapInfo"] as MeetGreet.Models.MapInfo;
-}
+        ViewBag.Title = "EventSubmitPage";
+        var data = ViewData["Addresses"] as MeetGreet.Models.Addresses;
+        //var beattyHalls = ViewData["BeattyHalls"] as MeetGreet.Models.Addresses;
+        var userEventData = ViewData["Event"] as MeetGreet.Models.Event;
+        var eventMarker = ViewData["MapInfo"] as MeetGreet.Models.MapInfo;
+        var eventImage = ViewData["EventImage"] as MeetGreet.Models.EventImage;
+    }
+
 <!-- Display event info to user-->
 <h1>Please review the information below before submitting your event.</h1>
 
@@ -13,6 +16,9 @@
 <p>Your events description: @userEventData.Description</p>
 <p>Your events scheduled date and time: @userEventData.ScheduledDateTime</p>
 <p>Your events Address: @userEventData.Address @userEventData.City, @userEventData.ZipCode</p>
+<p>Your event Image:</p>
+<img src="data:image;base64,@System.Convert.ToBase64String(@eventImage.imageBytes)" style="height:300px; width:300px;"/>
+<br />
 <br />
 <!--Map Setup-->
 <style>
@@ -31,8 +37,7 @@
       crossorigin="" />
 <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
         integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
-        crossorigin="">
-</script>
+        crossorigin=""></script>
 
 <div class="row">
     <div id="map">
@@ -50,7 +55,7 @@
             }).addTo(map);
 
             L.marker([@eventMarker.lat, @eventMarker.lon]).addTo(map)
-            
+
         </script>
     </div>
 </div>
@@ -60,7 +65,9 @@
     <p>Something wrong? Click "Go Back and retry the event creation. If not click "Submit" to submit your event. </p>
     <form asp-controller="EventCreation" asp-action="EventCreationPage">
         <input type="submit" value="Go Back" style="display: inline;" />
-    </form> 
+    </form>
+
+
 
     <!--If there is nothing wrong then the data is passed to the Individual Event Controller and the SubmitToSQL action. The form is hidden
         so that the user cannot see it but the data will still be passed.
@@ -74,7 +81,14 @@
         <input hidden type="text" name="eventCity" value="@userEventData.City" />
         <input hidden type="text" name="eventZipCode" value="@userEventData.ZipCode" />
         <input hidden type="number" name="eventLatitude" value="@userEventData.GeoLocationLatitude" />
-        <input hidden tpye="number" name="eventLongitude" value="@userEventData.GeoLocationLongitude" />
-        <input type="submit" style="display: inline;"/>
+        <input hidden type="number" name="eventLongitude" value="@userEventData.GeoLocationLongitude" />
+        <input hidden type="text" name="imageByteString" value="@System.Convert.ToBase64String(@eventImage.imageBytes)" />
+        <input hidden type="text" name="eventImageName" value="@eventImage.imageFileForm.FileName" />
+        <input type="submit" style="display: inline;" />
     </form>
 </div>
+
+<form asp-controller="IndividualEvent" asp-action="IndividualEventPage">
+    <input type="text" name="eventID" placeholder="Enter an Event ID" />
+    <input type="submit" />
+</form>
