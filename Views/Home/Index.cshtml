@@ -1,69 +1,214 @@
-﻿@model MeetGreet2.Models.Addresses
+﻿@model List<MeetGreet.Models.Event>
 @{
     ViewBag.Title = "Home Page";
-    var data = ViewData["Addresses"] as MeetGreet2.Models.Addresses;
-    var beattyHalls = ViewData["BeattyHalls"] as MeetGreet2.Models.Addresses;
+    var images = ViewData["Images"] as Dictionary<int, string>;
 }
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
 <style>
     #map {
         height: 300px;
+    }
+    
+    .card, cards-wrapper, card-body {
+        background-color: darkgray;
+    }
+    .carousel-inner.myInner {
+        border-top: 2px;
+        border-left: 2px;
+        border-right: 2px;
+        border-bottom: 2px;
+        border-color: black;
+        background-color: white;
+        border-style: solid
+    }
+
+    .fa-user:hover {
+        color: red;
     }
 </style>
 
 <!-- "noscript" tag will be displayed if JavaScript is not supported or turned off in a browser. -->
 <noscript>
-    <h1>Your browser does not support JavaScript. Please switch to a different browser or turn JavaScript on.</h1>
+    <div class="container alert-warning align-content-md-center">
+        <h1>Your browser does not support JavaScript. Please switch to a different browser or turn JavaScript on.</h1>
+    </div>
 </noscript>
 
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
-      integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
-      crossorigin="" />
-<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
-        integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
-        crossorigin="">
-</script>
-
-<div class="row">
-    <div id="map">
-        <style>
-            img.huechange {
-                filter: hue-rotate(120deg);
-            }
-        </style>
-        <script type="text/javascript">
-            // TODO: The location should be set to the current location of the user.
-            // It is currently set to be whatever the first address is in the list of "addresses" passed to view.
-                var map = L.map('map').setView([@data.elements[0].lat, @data.elements[0].lon], 13);
-
-                L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                }).addTo(map);
-
-            getLocation();
-            function getLocation() {
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(showPosition);
-                } else {
-
-                }
-            }
-
-            function showPosition(position) {
-
-                L.marker([position.coords.latitude, position.coords.longitude]).addTo(map)
-                .bindPopup('YOUR LOCATION.')
-                .openPopup();
-            }
-
-            @foreach (var address in beattyHalls.elements)
-            {
-                @:var marker = L.marker([@address.center.lat, @address.center.lon], { html: "<span style='background-color:#00FF00'>" }).addTo(map).bindPopup('This marker should be locations of events.').openPopup();
-                @:marker._icon.classList.add("huechange");
-            }
-        </script>
-
+<body>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+          integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
+          crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+            integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
+            crossorigin="">
+    </script>
+    <div class="row">
+        <a asp-controller="EventCreation" asp-action="EventCreationPage">Interested In Hosting an Event?</a>
     </div>
-</div>
+    <div class="row">
+        <form asp-action="Index" method="get">
+            <input type="text" name="searchString" placeholder="Search For Events" style="width:90%" />
+            <input type="submit" />
+        </form>
+    </div>
+    <br />
+    <div class="row">
+        <div id="map">
+            <style>
+                img.huechange {
+                    filter: hue-rotate(120deg);
+                }
+            </style>
+            <script type="text/javascript">
+
+                getLocation();
+
+                // getLocation retrieves users current location.
+                function getLocation() {
+                    if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(showPosition, showError);
+                    } else {
+                        // Alert user if no location services
+                        alert("We cannot get your location! Please allow us to access your location!");
+                    }
+                }
+                // Added custom user location marker.
+                var UserIcon = L.Icon.extend({
+                   options: {
+                        iconUrl: '/MapImages/UserIconImage.png',
+                        shadowUrl: 'http://leafletjs.com/examples/custom-icons/leaf-shadow.png',
+                        iconSize: new L.Point(60, 40),
+                        opacity: 0.5,
+                        shadowSize: new L.Point(0, 0),
+                        iconAnchor: new L.Point(16, 16),
+                        popupAnchor: new L.Point(0, -18)
+                      }
+                    });
+                
+                //will throw error if user does not allow location services
+                function showError(error){
+                    alert("We cannot get your location! Please allow us to access your location!")
+                }
+
+                function showPosition(position) {
+
+
+                    // Centers the map to the current position of the user.
+                    var map = L.map('map').setView([position.coords.latitude, position.coords.longitude], 13);
+
+                    // Code below checks to see if the event is within range. If the event is within range of the user, the event will be displayed.
+                    // Otherwise, the event will not.
+                    var arr = @Json.Serialize(Model);
+                    for (obj of arr) {
+
+                        // If hosts specified a radius.
+                        if(obj.radius != null){
+
+                            // If user is within range, display event markers.
+                            if (obj.geoLocationLatitude + obj.radius <= position.coords.latitude && obj.geoLocationLatitude - obj.radius >= position.coords.latitude && obj.geoLocationLongitude + obj.radius <= position.coords.longitude && obj.geoLocationLongitude - obj.radius >= position.coords.longitude) {
+                                var marker = L.marker([obj.geoLocationLatitude, obj.geoLocationLongitude], { html: "<span style='background-color:#00FF00'>" }).addTo(map).bindPopup('Event: ' + obj.title).openPopup();
+                                marker._icon.classList.add("huechange");
+
+                            }
+                        }
+                        // If radius is null, then all users will be able to see the event.
+                        else{
+                            var marker = L.marker([obj.geoLocationLatitude, obj.geoLocationLongitude], { html: "<span style='background-color:#00FF00'>" }).addTo(map).bindPopup('Event: ' + obj.title).openPopup();
+                            marker._icon.classList.add("huechange");
+                        }
+                    }
+
+                    // Add copyright label for OpenStreetMap.
+                    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    }).addTo(map);
+
+                    L.marker([position.coords.latitude, position.coords.longitude], { icon: new UserIcon() }).addTo(map)
+                        .bindPopup('YOUR LOCATION.')
+                        .openPopup();
+
+                    map.setView([position.coords.latitude, position.coords.longitude], 13);
+                }
+            </script>
+
+        </div>
+    </div>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 <div class="row">
-    <textarea>This is where we'll have the feed.</textarea>
-</div>
+    <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+
+            <div class="carousel-inner myInner">
+                @{
+                    if(Model.Count > 0)
+                    {
+                        @for (int i = 0; i < Model.Count; i += 4)
+                        {
+                            var start = "active";
+                            if (i != 0)
+                            {
+                                start = "";
+                            }
+                            <div class="carousel-item @start">
+                                <div class="row">
+                                 <!-- Dynamically create cards for events in the model. -->
+                                    @for (int j = i; j < i + 4; j++)
+                                    {
+                                        @if (j < Model.Count)
+                                        {
+                                            <div class="col">
+                                                <div class="cards-wrapper">
+                                                    <div class="card" style="background-color:lightgray">
+                                                        <img src="@images[Model[j].Id]" class="card-img-top" alt="...">
+                                                        <div class="card-body">
+                                                        <!-- TODO: Was originally going to add a comment for when users already indicated their attendance for an event, but its too performance heavy. -->
+                                                            @if(Model[j].AttendingIndications.Count == 0)
+                                                            {
+                                                                <a asp-action="Attendance" asp-route-Attending="@Model[j].Id"><i class="fa fa-user-check fa-beat"></i></a>
+                                                                <a asp-action="Attendance" asp-route-Interested="@Model[j].Id"><i class="fa fa-user-pen fa-beat"></i></a>
+                                                                <a asp-action="Attendance" asp-route-NotAttending="@Model[j].Id"><i class="fa fa-user-slash fa-beat"></i></a>
+                                                            }
+                                                            else
+                                                            {
+                                                                <p class="alert-success">Sent your indication!</p>
+                                                            }
+                                                            <h5 class="card-title">Event Name:@Model[j].Title</h5>
+                                                            <p class="card-text">Location: @Model[j].Address, @Model[j].City, @Model[j].ZipCode <br />Geolocation: (@Model[j].GeoLocationLatitude, @Model[j].GeoLocationLongitude)<br />Description: @Model[j].Description</p>
+                                                            <form method="post" asp-controller="IndividualEvent" asp-action="IndividualEventPage">
+                                                                <input type="hidden" name="eventID" value="@Model[j].Id" />
+                                                                <input type="submit" class="btn btn-primary" style="background-color:mediumseagreen" value="Go To My Event Page" />
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <h1 style="text-align:center;">No events found...</h1>
+                    }
+                }
+                <a style="width:5%;height:50%" class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a style="width:5%;height:50%" class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</body>

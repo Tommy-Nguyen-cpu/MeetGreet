@@ -1,0 +1,37 @@
+﻿@model MeetGreet.Models.EventImage;
+
+<h1>There was an error with your previous request please retype your information and make sure all address details are correct.</h1>
+
+<div class="InfoForm">
+    <form method="post" asp-controller="EventSubmit" asp-action="EventSubmitPage" enctype="multipart/form-data">
+        <label>Event Name</label>
+        <br />
+        <input type="text" placaeholder="Event Name" name="userEventName" required />
+        <br />
+        <label>Event Description</label>
+        <br />
+        <textarea name="userDescription" required></textarea>
+        <br />
+        <label>Event Date and Time</label>
+        <br />
+        <input type="datetime-local" name="userDateTime" required />
+        <br />
+        <label>Add an Image Displaying the Event Venu</label>
+        <br />
+        <input asp-for="imageFileForm" type="file" accept="image/jpeg, image/png" required />
+        <br />
+        <label>Street Address</label>
+        <br />
+        <input type="text" name="userAddress" required />
+        <br />
+        <label>City</label>
+        <br />
+        <input type="text" name="userCity" required />
+        <br />
+        <label>Zip Code</label>
+        <br>
+        <input type="number" name="userZipCode" required />
+        <br />
+        <input type="submit" value="Submit" />
+    </form>
+</div>

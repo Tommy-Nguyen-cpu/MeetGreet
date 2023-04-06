@@ -1,0 +1,53 @@
+﻿@using MeetGreet.Models;
+@{
+    var userEventData = ViewData["Event"] as MeetGreet.Models.Event;
+    var imageURL = ViewData["ImageURL"] as string;
+}
+
+
+<h3>@userEventData.ScheduledDateTime</h3>
+<br />
+<h3><img src="@imageURL" style="height:300px; width:300px;" /></h3>
+<br />
+<h3>@userEventData.Title</h3>
+<br />
+<h3>@userEventData.Description</h3>
+<br />
+
+<style>
+    #map {
+        height: 300px;
+    }
+</style>
+
+<!-- "noscript" tag will be displayed if JavaScript is not supported or turned off in a browser. -->
+<noscript>
+    <h1>Your browser does not support JavaScript. Please switch to a different browser or turn JavaScript on.</h1>
+</noscript>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+      integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
+      crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+        integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
+        crossorigin=""></script>
+
+<div class="row">
+    <div id="map">
+        <style>
+            img.huechange {
+                filter: hue-rotate(120deg);
+            }
+        </style>
+        <script type="text/javascript">
+            var map = L.map('map').setView([@userEventData.GeoLocationLatitude, @userEventData.GeoLocationLongitude], 15);
+
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            L.marker([@userEventData.GeoLocationLatitude, @userEventData.GeoLocationLongitude]).addTo(map)
+
+        </script>
+    </div>
+</div>

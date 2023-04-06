@@ -3,10 +3,10 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - MeetGreet2</title>
+    <title>@ViewData["Title"] - MeetGreet</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/MeetGreet2.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/MeetGreet.styles.css" asp-append-version="true" />
 </head>
 <body>
     <style>
@@ -18,7 +18,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a style="color:mediumseagreen;" class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">MeetGreet</a>
+                <a style="width:10%" class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/BackgroundImages/MeetGreetLogo.gif" style="height:50%;width:100%" /></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -31,6 +31,9 @@
                         <li class="nav-item">
                             <a style="color:mediumseagreen;" class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+                        <li>
+                            <a style="color:mediumseagreen;" class="nav-link" asp-controller="Home" asp-action="AboutUs">About Us</a>
+                        </li>
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
@@ -42,12 +45,6 @@
             @RenderBody()
         </main>
     </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2023 - MeetGreet2 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

@@ -1,0 +1,94 @@
+﻿<!-- Import data passed in from controller -->
+@using MeetGreet.Models
+@{
+        ViewBag.Title = "EventSubmitPage";
+        var data = ViewData["Addresses"] as MeetGreet.Models.Addresses;
+        //var beattyHalls = ViewData["BeattyHalls"] as MeetGreet.Models.Addresses;
+        var userEventData = ViewData["Event"] as MeetGreet.Models.Event;
+        var eventMarker = ViewData["MapInfo"] as MeetGreet.Models.MapInfo;
+        var eventImage = ViewData["EventImage"] as MeetGreet.Models.EventImage;
+    }
+
+<!-- Display event info to user-->
+<h1>Please review the information below before submitting your event.</h1>
+
+<p>Your events title: @userEventData.Title</p>
+<p>Your events description: @userEventData.Description</p>
+<p>Your events scheduled date and time: @userEventData.ScheduledDateTime</p>
+<p>Your events Address: @userEventData.Address @userEventData.City, @userEventData.ZipCode</p>
+<p>Your event Image:</p>
+<img src="data:image;base64,@System.Convert.ToBase64String(@eventImage.imageBytes)" style="height:300px; width:300px;"/>
+<br />
+<br />
+<!--Map Setup-->
+<style>
+    #map {
+        height: 300px;
+    }
+</style>
+
+<!-- "noscript" tag will be displayed if JavaScript is not supported or turned off in a browser. -->
+<noscript>
+    <h1>Your browser does not support JavaScript. Please switch to a different browser or turn JavaScript on.</h1>
+</noscript>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+      integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
+      crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+        integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
+        crossorigin=""></script>
+
+<div class="row">
+    <div id="map">
+        <style>
+            img.huechange {
+                filter: hue-rotate(120deg);
+            }
+        </style>
+        <script type="text/javascript">
+            //Access model to get the event longitude and latidude so they can be displayed
+            var map = L.map('map').setView([@eventMarker.lat, @eventMarker.lon], 15);
+
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            L.marker([@eventMarker.lat, @eventMarker.lon]).addTo(map)
+
+        </script>
+    </div>
+</div>
+
+<div id="buttons">
+    <!--If something wrong form redirects user back to Event Creation Page-->
+    <p>Something wrong? Click "Go Back and retry the event creation. If not click "Submit" to submit your event. </p>
+    <form asp-controller="EventCreation" asp-action="EventCreationPage">
+        <input type="submit" value="Go Back" style="display: inline;" />
+    </form>
+
+
+
+    <!--If there is nothing wrong then the data is passed to the Individual Event Controller and the SubmitToSQL action. The form is hidden
+        so that the user cannot see it but the data will still be passed.
+    -->
+    <form method="post" asp-controller="IndividualEvent" asp-action="SubmitToSQL">
+        @* needs to be passed in as text becuase having type="datetime-local" sets the value back to default (01/01/001 12:00AM) *@
+        <input hidden type="text" name="eventDate" value="@userEventData.ScheduledDateTime" />
+        <input hidden type="text" name="eventTitle" value="@userEventData.Title" />
+        <input hidden type="text" name="eventDescription" value="@userEventData.Description" />
+        <input hidden type="text" name="eventAddress" value="@userEventData.Address" />
+        <input hidden type="text" name="eventCity" value="@userEventData.City" />
+        <input hidden type="text" name="eventZipCode" value="@userEventData.ZipCode" />
+        <input hidden type="number" name="eventLatitude" value="@userEventData.GeoLocationLatitude" />
+        <input hidden type="number" name="eventLongitude" value="@userEventData.GeoLocationLongitude" />
+        <input hidden type="text" name="imageByteString" value="@System.Convert.ToBase64String(@eventImage.imageBytes)" />
+        <input hidden type="text" name="eventImageName" value="@eventImage.imageFileForm.FileName" />
+        <input type="submit" style="display: inline;" />
+    </form>
+</div>
+
+<form asp-controller="IndividualEvent" asp-action="IndividualEventPage">
+    <input type="text" name="eventID" placeholder="Enter an Event ID" />
+    <input type="submit" />
+</form>

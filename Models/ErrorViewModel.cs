@@ -1,4 +1,4 @@
-namespace MeetGreet2.Models
+namespace MeetGreet.Models
 {
     public class ErrorViewModel
     {
