@@ -13,12 +13,11 @@ using MailKit.Security;
 using MailKit.Net.Smtp;
 using System.Security.Claims;
 using System;
+using MeetGreet.AmazonS3HelperClasses;
 
 namespace MeetGreet.Controllers
 {
-    // "Authorize" tag essentially says that only users who are logged in can have access to the pages associated with this controller.
-    // We can bring the "Authorize" tag to any and all controller and it will do the exact same thing.
-    [Authorize]
+
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -36,6 +35,9 @@ namespace MeetGreet.Controllers
             connect = connection;
         }
 
+        // "Authorize" tag essentially says that only users who are logged in can have access to the pages associated with this controller.
+        // We can bring the "Authorize" tag to any and all controller and it will do the exact same thing.
+        [Authorize]
         public async Task<ActionResult> Attendance(int? Attending = null, int? Interested = null, int? NotAttending = null)
         {
             Debug.WriteLine("Attending?: " + Attending);
@@ -79,46 +81,49 @@ namespace MeetGreet.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize]
         public ActionResult Index(string? searchString)
         {
+
             // If the user the search bar to search for an event by name, we will query in the context object.
             if (!String.IsNullOrEmpty(searchString))
             {
                 // Searches for all events with the matching search string.
-                List<Event> searchedEvents = new List<Event>();
-                foreach(var myEvent in _context.Events)
-                {
-                    if(myEvent.Title.ToLower().Contains(searchString.ToLower()))
-                        searchedEvents.Add(myEvent);
-                }
+                (List<Event> searchedEvents, Dictionary<int, string> imageUrls) = RetrieveEvents(searchString);
+
+                ViewData["Images"] = imageUrls;
 
                 // Returns list of all events containing the same search string.
                 return View(searchedEvents);
             }
 
+            (List<Event> events, Dictionary<int, string> images) = RetrieveEvents();
+            ViewData["Images"] = images;
             // Sends the list of events to the View.
-            return View(RetrieveEvents());
+            return View(events);
         }
 
+        // Default generated method (points to Privacy view page).
         public IActionResult Privacy()
         {
-          
-
             return View();
         }
 
+        // Directs user to the "About Us" page on the site.
+        public IActionResult AboutUs()
+        {
+            return View();
+        }
+
+        // Default generated error message.
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        private List<Event> RetrieveEvents()
+        private (List<Event>, Dictionary<int, string>) RetrieveEvents(string? searchEventTitle = null)
         {
-            Debug.WriteLine("There are " + _context.Events.Count() + " events in the database table");
-
-            // Retrieves the ID of the current user.
-            string? currentUserID = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             // Instantiates a list of events.
             List<Event> events = new List<Event>();
@@ -126,10 +131,39 @@ namespace MeetGreet.Controllers
             // Iterates through all events in the database.
             foreach(var myEvent in _context.Events)
             {
-                events.Add(myEvent);
+                // If the user uses the search bar to search for a particular event.
+                if(searchEventTitle != null)
+                {
+                    if (myEvent.Title.ToLower().Contains(searchEventTitle.ToLower()))
+                    {
+                        events.Add(myEvent);
+                    }
+                }
+                else
+                {
+                    events.Add(myEvent);
+                }
             }
 
-            return events;
+            Dictionary<int, string> images = new Dictionary<int, string>();
+
+            // Initializes AmaonS3Helper class, which will retrieve the URL for the images from the button.
+            AmazonS3Helper s3Helper = new AmazonS3Helper(_context, connect);
+            // Iterates through each event. If an event has an image, add the image model to the list of images in the event model.
+            foreach (var myEvent in events)
+            {
+                foreach(var image in _context.Images)
+                {
+                    if(myEvent.Id == image.EventId)
+                    {
+                        string imageURL = s3Helper.retrieveS3BucketImageURL(image.S3key);
+                        images.Add(image.EventId, imageURL);
+                        break;
+                    }
+                }
+            }
+
+            return (events, images);
         }
 
 

@@ -1,6 +1,7 @@
 ﻿@model List<MeetGreet.Models.Event>
 @{
     ViewBag.Title = "Home Page";
+    var images = ViewData["Images"] as Dictionary<int, string>;
 }
 
 <meta charset="utf-8">
@@ -158,7 +159,7 @@
                                             <div class="col">
                                                 <div class="cards-wrapper">
                                                     <div class="card" style="background-color:lightgray">
-                                                        <img src="..." class="card-img-top" alt="...">
+                                                        <img src="@images[Model[j].Id]" class="card-img-top" alt="...">
                                                         <div class="card-body">
                                                         <!-- TODO: Was originally going to add a comment for when users already indicated their attendance for an event, but its too performance heavy. -->
                                                             @if(Model[j].AttendingIndications.Count == 0)
@@ -193,11 +194,11 @@
                         <h1 style="text-align:center;">No events found...</h1>
                     }
                 }
-                <a style="width:5%" class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                <a style="width:5%;height:50%" class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                     <span class="sr-only">Previous</span>
                 </a>
-                <a style="width:5%" class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                <a style="width:5%;height:50%" class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                     <span class="sr-only">Next</span>
                 </a>
