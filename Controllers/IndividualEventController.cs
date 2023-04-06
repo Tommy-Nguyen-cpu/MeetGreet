@@ -33,17 +33,23 @@ namespace MeetGreet.Controllers
             s3Helper = amazonS3Helper;
         }
 
+        /*This Task is meant as the method that a user will use to see an individual event page.
+         * The eventID is passed into the method as a param so that we can query the SQL table.
+         * As the data is read in from the SQL it is assigned to the event model so it can be passed to the 
+         * individual event page.
+         */
         [HttpPost]
         public async Task<IActionResult> IndividualEventPage(int eventID)
         {
             await connect.OpenAsync();
-            // Sends a request for email in table "user".
+            // Sends a request for all data related to event with the same ID
             MySqlCommand command = new MySqlCommand("SELECT * FROM Event WHERE ID="+ eventID, connect);
-
+            //Create empty event model
             Event userEvent = new Event();
 
             // Reads result.
             MySqlDataReader reader = command.ExecuteReader();
+            //The return values from the SQL are always in the same order so grabbing specific values just means grabbing a certain value
             while (reader.Read())
             {
                 userEvent.Id = Convert.ToInt32(reader.GetValue(0).ToString());
@@ -58,15 +64,21 @@ namespace MeetGreet.Controllers
             }
 
             reader.Close();
-
+            //pass the data as a ViewData object to the view
             ViewData["Event"] = userEvent;
             ViewData["ImageURL"] = getImageURL(userEvent.Id);
             return View();
         }
 
+        /*
+         * This is where the event that a user has created will be submitted to the SQL database. The method takes in all the needed info as 
+         * params and assigns them inside a model. That model is then passed to the SQL table and the data inside is pushed. The event is also
+         * passed to the individual event page so that it can display the correct information
+         */
         [HttpPost]
         public async Task<IActionResult> SubmitToSQL(DateTime eventDate, string eventTitle, string eventDescription, string eventAddress, string eventCity, string eventZipCode, double eventLatitude, double eventLongitude, string imageByteString, string eventImageName)
         {
+            //assign params to values in event model
             Event userEvent = new Event
             {
                 Title = eventTitle,
@@ -78,7 +90,7 @@ namespace MeetGreet.Controllers
                 GeoLocationLatitude = eventLatitude,
                 GeoLocationLongitude = eventLongitude
             };
-
+            //pushing data to the SQL table
             string? id = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (id != null)
             {
@@ -86,7 +98,6 @@ namespace MeetGreet.Controllers
                 _context.Add(userEvent);
                 _context.SaveChanges();
             }
-
 
             string objectID = await s3Helper.uploadImageToS3Bucket(Convert.FromBase64String(imageByteString), userEvent);
 
