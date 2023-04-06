@@ -71,8 +71,8 @@
                     if (navigator.geolocation) {
                         navigator.geolocation.getCurrentPosition(showPosition, showError);
                     } else {
-                        // TODO: Figure out how we'll add HTML tags through JavaScript.
-                        // alert("You do not have location services enabled please enable them and refresh the page!");
+                        // Alert user if no location services
+                        alert("We cannot get your location! Please allow us to access your location!");
                     }
                 }
                 // Added custom user location marker.
