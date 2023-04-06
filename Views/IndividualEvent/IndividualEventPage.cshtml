@@ -1,13 +1,13 @@
 ﻿@using MeetGreet.Models;
 @{
     var userEventData = ViewData["Event"] as MeetGreet.Models.Event;
-    var eventImage = ViewData["EventImage"] as MeetGreet.Models.EventImage;
+    var imageURL = ViewData["ImageURL"] as string;
 }
 
 
 <h3>@userEventData.ScheduledDateTime</h3>
 <br />
-<h3><img src="data:image;base64,@System.Convert.ToBase64String(@eventImage.imageBytes)" style="height:300px; width:300px;" /></h3>
+<h3><img src="@imageURL" style="height:300px; width:300px;" /></h3>
 <br />
 <h3>@userEventData.Title</h3>
 <br />
