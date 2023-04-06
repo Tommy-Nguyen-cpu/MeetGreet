@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using NuGet.Protocol.Core.Types;
 using MeetGreet.AmazonS3HelperClasses;
 using System.Security.AccessControl;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MeetGreet.Controllers
 {
@@ -45,6 +46,7 @@ namespace MeetGreet.Controllers
             MySqlDataReader reader = command.ExecuteReader();
             while (reader.Read())
             {
+                userEvent.Id = Convert.ToInt32(reader.GetValue(0).ToString());
                 userEvent.Title = reader.GetValue(1).ToString();
                 userEvent.Description = reader.GetValue(4).ToString();
                 userEvent.ScheduledDateTime = DateTime.Parse(reader.GetValue(10).ToString());
@@ -55,9 +57,10 @@ namespace MeetGreet.Controllers
                 userEvent.GeoLocationLongitude = Convert.ToDouble(reader.GetValue(5).ToString());
             }
 
-            //reader.Close();
+            reader.Close();
 
             ViewData["Event"] = userEvent;
+            ViewData["ImageURL"] = getImageURL(userEvent.Id);
             return View();
         }
 
@@ -97,18 +100,31 @@ namespace MeetGreet.Controllers
             }
 
             ViewData["Event"] = userEvent;
-            ViewData["EventImage"] = new EventImage()
-            {
-                imageBytes = Convert.FromBase64String(imageByteString),
-            };
+            ViewData["ImageURL"] = getImageURL(userEvent.Id);
 
             return View("~/Views/IndividualEvent/IndividualEventPage.cshtml");
         }
 
-        private string BUCKET_NAME = "meetgreet-image-store";
+        private string getImageURL(int eventID) {
+            if(connect.State != System.Data.ConnectionState.Open)
+            {
+                connect.Open();
+            }
+            MySqlCommand command = new MySqlCommand("SELECT * FROM Image WHERE EventId=" + eventID, connect);
 
+            // Reads result.
+            MySqlDataReader reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                Console.WriteLine("READER: " + reader.GetValue(2));
+                string s3Key = reader.GetValue(2).ToString() ?? "";
+                return s3Helper.retrieveS3BucketImageURL(s3Key);
+            }
+            reader.Close();
+            return "";
+        }
 
-        private void saveImageToDatabase(Event userEvent, String s3Key)
+        private void saveImageToDatabase(Event userEvent, string s3Key)
         {
             Image image = new Image()
             {

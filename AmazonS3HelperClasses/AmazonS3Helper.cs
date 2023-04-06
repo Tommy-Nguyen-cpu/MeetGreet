@@ -55,7 +55,7 @@ namespace MeetGreet.AmazonS3HelperClasses
             // Sends a request for API KEYS FOR AWS
             MySqlCommand command = new MySqlCommand("SELECT * FROM AWSAPIKey WHERE ID=1", connect);
 
-            IAmazonS3 s3Client = new AmazonS3Client();
+            IAmazonS3 s3Client = new AmazonS3Client("", "", Amazon.RegionEndpoint.USEast1);
 
             // Reads result.
             MySqlDataReader reader = command.ExecuteReader();
