@@ -25,7 +25,7 @@ namespace MeetGreet.Controllers
             {
                 await imageFileForm.CopyToAsync(memoryStream);
                 eventImage.imageBytes = memoryStream.GetBuffer();
-                
+
             }
 
 
