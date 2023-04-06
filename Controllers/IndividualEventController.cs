@@ -3,6 +3,17 @@ using MeetGreet.Models;
 using Microsoft.AspNetCore.Mvc;
 using MySqlConnector;
 using System.Security.Claims;
+using System;
+using Amazon.Runtime;
+using Amazon.S3;
+using Amazon.S3.Model;
+using Amazon.Extensions.NETCore.Setup;
+using static Amazon.RegionEndpoint;
+using Microsoft.Extensions.Logging;
+using NuGet.Protocol.Core.Types;
+using MeetGreet.AmazonS3HelperClasses;
+using System.Security.AccessControl;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MeetGreet.Controllers
 {
@@ -11,12 +22,15 @@ namespace MeetGreet.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly MeetgreetContext _context;
         private readonly MySqlConnection connect;
+        private readonly AmazonS3Helper s3Helper;
 
-        public IndividualEventController(ILogger<HomeController> logger, MeetgreetContext context, MySqlConnection connection)
+        public IndividualEventController(ILogger<HomeController> logger, MeetgreetContext context, MySqlConnection connection, AmazonS3Helper amazonS3Helper)
         {
             _logger = logger;
             _context = context;
             connect = connection;
+
+            s3Helper = amazonS3Helper;
         }
 
         /*This Task is meant as the method that a user will use to see an individual event page.
@@ -38,6 +52,7 @@ namespace MeetGreet.Controllers
             //The return values from the SQL are always in the same order so grabbing specific values just means grabbing a certain value
             while (reader.Read())
             {
+                userEvent.Id = Convert.ToInt32(reader.GetValue(0).ToString());
                 userEvent.Title = reader.GetValue(1).ToString();
                 userEvent.Description = reader.GetValue(4).ToString();
                 userEvent.ScheduledDateTime = DateTime.Parse(reader.GetValue(10).ToString());
@@ -51,6 +66,7 @@ namespace MeetGreet.Controllers
             reader.Close();
             //pass the data as a ViewData object to the view
             ViewData["Event"] = userEvent;
+            ViewData["ImageURL"] = getImageURL(userEvent.Id);
             return View();
         }
 
@@ -60,7 +76,7 @@ namespace MeetGreet.Controllers
          * passed to the individual event page so that it can display the correct information
          */
         [HttpPost]
-        public async Task<IActionResult> SubmitToSQL(DateTime eventDate, string eventTitle, string eventDescription, string eventAddress, string eventCity, string eventZipCode, double eventLatitude, double eventLongitude)
+        public async Task<IActionResult> SubmitToSQL(DateTime eventDate, string eventTitle, string eventDescription, string eventAddress, string eventCity, string eventZipCode, double eventLatitude, double eventLongitude, string imageByteString, string eventImageName)
         {
             //assign params to values in event model
             Event userEvent = new Event
@@ -71,20 +87,63 @@ namespace MeetGreet.Controllers
                 Address = eventAddress,
                 City = eventCity,
                 ZipCode = eventZipCode,
-                GeoLocationLatitude= eventLatitude,
-                GeoLocationLongitude= eventLongitude
+                GeoLocationLatitude = eventLatitude,
+                GeoLocationLongitude = eventLongitude
             };
             //pushing data to the SQL table
             string? id = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if(id != null)
+            if (id != null)
             {
                 userEvent.CreatedByUserId = id;
                 _context.Add(userEvent);
                 _context.SaveChanges();
             }
-            //Pass data to Individual Event Page
+
+            string objectID = await s3Helper.uploadImageToS3Bucket(Convert.FromBase64String(imageByteString), userEvent);
+
+            if(objectID == "ERROR")
+            {
+                Console.Write("ERROR: The image could not be saved to S3. It will not be written to the MYSQL Server.");
+
+            }
+            else {
+                saveImageToDatabase(userEvent, objectID);
+            }
+
             ViewData["Event"] = userEvent;
+            ViewData["ImageURL"] = getImageURL(userEvent.Id);
+
             return View("~/Views/IndividualEvent/IndividualEventPage.cshtml");
+        }
+
+        private string getImageURL(int eventID) {
+            if(connect.State != System.Data.ConnectionState.Open)
+            {
+                connect.Open();
+            }
+            MySqlCommand command = new MySqlCommand("SELECT * FROM Image WHERE EventId=" + eventID, connect);
+
+            // Reads result.
+            MySqlDataReader reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                Console.WriteLine("READER: " + reader.GetValue(2));
+                string s3Key = reader.GetValue(2).ToString() ?? "";
+                return s3Helper.retrieveS3BucketImageURL(s3Key);
+            }
+            reader.Close();
+            return "";
+        }
+
+        private void saveImageToDatabase(Event userEvent, string s3Key)
+        {
+            Image image = new Image()
+            {
+                EventId = userEvent.Id,
+                S3key = s3Key
+            };
+            _context.Add(image);
+            _context.SaveChanges();
         }
     }
 }
