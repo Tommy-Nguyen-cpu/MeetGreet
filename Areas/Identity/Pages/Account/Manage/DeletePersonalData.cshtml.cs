@@ -100,14 +100,16 @@ namespace MeetGreet.Areas.Identity.Pages.Account.Manage
 
             foreach(var myEvent in _context.Events.Where(ex => ex.CreatedByUserId == user.Id).ToList())
             {
-                _context.Remove(myEvent);
-                await _context.SaveChangesAsync();
 
                 foreach (var image in _context.Images.Where(ex => ex.EventId == myEvent.Id).ToList())
                 {
                     _context.Remove(image);
                     await _context.SaveChangesAsync();
                 }
+
+
+                _context.Remove(myEvent);
+                await _context.SaveChangesAsync();
             }
 
             var result = await _userManager.DeleteAsync(user);
