@@ -90,24 +90,28 @@ namespace MeetGreet.Areas.Identity.Pages.Account.Manage
                 }
             }
 
+            // Looks for all "attendance indications" that the current user is associated with.
             List<AttendingIndication> indications = _context.AttendingIndications.Where(ex => ex.UserId == user.Id).ToList();
 
+            // Removes them from the database.
             foreach(var indication in indications)
             {
                 _context.Remove(indication);
                 await _context.SaveChangesAsync();
             }
 
+            // Finds all events hosted by the current user.
             foreach(var myEvent in _context.Events.Where(ex => ex.CreatedByUserId == user.Id).ToList())
             {
-
+                // Finds all images associated with the current event.
                 foreach (var image in _context.Images.Where(ex => ex.EventId == myEvent.Id).ToList())
                 {
+                    // Removes images from "Image" table in database.
                     _context.Remove(image);
                     await _context.SaveChangesAsync();
                 }
 
-
+                // Removes event from database.
                 _context.Remove(myEvent);
                 await _context.SaveChangesAsync();
             }
