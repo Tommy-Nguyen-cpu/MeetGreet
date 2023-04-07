@@ -10,7 +10,7 @@
         <form asp-action="SendEmailUpdate">
             <input type="hidden" value="@userEventData.Id" name="eventID"/>
             <input type="text" name="emailHeader" value="Enter Email Header" />
-            <input type="text" name="emailBody" value="Body of the email" />
+            <textarea name="emailBody">Body of the email.</textarea>
             <input type="submit" />
         </form>
     }
