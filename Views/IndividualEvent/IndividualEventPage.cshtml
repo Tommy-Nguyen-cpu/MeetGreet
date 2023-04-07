@@ -4,6 +4,17 @@
     var imageURL = ViewData["ImageURL"] as string;
 }
 
+@{
+    if(ViewData["IsHost"] != null)
+    {
+        <form asp-action="SendEmailUpdate">
+            <input type="hidden" value="@userEventData.Id" name="eventID"/>
+            <input type="text" name="emailHeader" value="Enter Email Header" />
+            <textarea name="emailBody">Body of the email.</textarea>
+            <input type="submit" />
+        </form>
+    }
+}
 
 <h3>@userEventData.ScheduledDateTime</h3>
 <br />
