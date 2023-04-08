@@ -84,11 +84,7 @@
         <input hidden type="number" name="eventLongitude" value="@userEventData.GeoLocationLongitude" />
         <input hidden type="text" name="imageByteString" value="@System.Convert.ToBase64String(@eventImage.imageBytes)" />
         <input hidden type="text" name="eventImageName" value="@eventImage.imageFileForm.FileName" />
+        <input hidden type="number" name="eventRadius" value="@userEventData.Radius" />
         <input type="submit" style="display: inline;" />
     </form>
 </div>
-
-<form asp-controller="IndividualEvent" asp-action="IndividualEventPage">
-    <input type="text" name="eventID" placeholder="Enter an Event ID" />
-    <input type="submit" />
-</form>

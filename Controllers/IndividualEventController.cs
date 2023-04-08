@@ -84,7 +84,7 @@ namespace MeetGreet.Controllers
          * passed to the individual event page so that it can display the correct information
          */
         [HttpPost]
-        public async Task<IActionResult> SubmitToSQL(DateTime eventDate, string eventTitle, string eventDescription, string eventAddress, string eventCity, string eventZipCode, double eventLatitude, double eventLongitude, string imageByteString, string eventImageName)
+        public async Task<IActionResult> SubmitToSQL(DateTime eventDate, string eventTitle, string eventDescription, string eventAddress, string eventCity, string eventZipCode, double eventLatitude, double eventLongitude, string imageByteString, string eventImageName, int eventRadius)
         {
             //assign params to values in event model
             Event userEvent = new Event
@@ -96,7 +96,8 @@ namespace MeetGreet.Controllers
                 City = eventCity,
                 ZipCode = eventZipCode,
                 GeoLocationLatitude = eventLatitude,
-                GeoLocationLongitude = eventLongitude
+                GeoLocationLongitude = eventLongitude,
+                Radius = eventRadius
             };
             //pushing data to the SQL table
             string? id = User.FindFirstValue(ClaimTypes.NameIdentifier);
