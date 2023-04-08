@@ -15,7 +15,7 @@ namespace MeetGreet.Controllers
          * map for the user. 
          */
         [HttpPost]
-        public async Task<IActionResult> EventSubmitPage(string userEventName, string userDescription, DateTime userDateTime, IFormFile imageFileForm, string userAddress, string userCity, string userZipCode)
+        public async Task<IActionResult> EventSubmitPage(string userEventName, string userDescription, DateTime userDateTime, IFormFile imageFileForm, string userAddress, string userCity, string userZipCode, int userRadius)
         {
 
             EventImage eventImage = new EventImage()
@@ -38,7 +38,8 @@ namespace MeetGreet.Controllers
                 ScheduledDateTime = userDateTime,
                 Address = userAddress,
                 City = userCity,
-                ZipCode = userZipCode
+                ZipCode = userZipCode,
+                Radius = userRadius
             };
             //create variables to hold longitude and latitude once API returns them
             double latitude = 0;
