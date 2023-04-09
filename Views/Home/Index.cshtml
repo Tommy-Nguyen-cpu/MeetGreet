@@ -9,7 +9,7 @@
 
 <style>
     #map {
-        height: 300px;
+        height: 600px;
     }
     
     .card, cards-wrapper, card-body {
@@ -110,14 +110,14 @@
 
                             // If user is within range, display event markers.
                             if (obj.geoLocationLatitude + obj.radius <= position.coords.latitude && obj.geoLocationLatitude - obj.radius >= position.coords.latitude && obj.geoLocationLongitude + obj.radius <= position.coords.longitude && obj.geoLocationLongitude - obj.radius >= position.coords.longitude) {
-                                var marker = L.marker([obj.geoLocationLatitude, obj.geoLocationLongitude], { html: "<span style='background-color:#00FF00'>" }).addTo(map).bindPopup('Event: ' + obj.title).openPopup();
+                                var marker = L.marker([obj.geoLocationLatitude, obj.geoLocationLongitude], { html: "<span style='background-color:#FFFFFF'>" }).addTo(map).bindPopup('Event: ' + obj.title).openPopup();
                                 marker._icon.classList.add("huechange");
 
                             }
                         }
                         // If radius is null, then all users will be able to see the event.
                         else{
-                            var marker = L.marker([obj.geoLocationLatitude, obj.geoLocationLongitude], { html: "<span style='background-color:#00FF00'>" }).addTo(map).bindPopup('Event: ' + obj.title).openPopup();
+                            var marker = L.marker([obj.geoLocationLatitude, obj.geoLocationLongitude], { html: "<span style='background-color:#FFFFFF'>" }).addTo(map).bindPopup('Event: ' + obj.title).openPopup();
                             marker._icon.classList.add("huechange");
                         }
                     }
@@ -127,10 +127,12 @@
                         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     }).addTo(map);
 
+                    // Add marker at the current users location.
                     L.marker([position.coords.latitude, position.coords.longitude], { icon: new UserIcon() }).addTo(map)
                         .bindPopup('YOUR LOCATION.')
                         .openPopup();
 
+                    // Set current focus of the map to be the current users location.
                     map.setView([position.coords.latitude, position.coords.longitude], 13);
                 }
             </script>
@@ -146,8 +148,10 @@
 
             <div class="carousel-inner myInner">
                 @{
+                    // If there are events.
                     if(Model.Count > 0)
                     {
+                        // Ensures each section of the carousel can hold at most 4 cards.
                         @for (int i = 0; i < Model.Count; i += 4)
                         {
                             var start = "active";
@@ -200,11 +204,11 @@
                         <h1 style="text-align:center;">No events found...</h1>
                     }
                 }
-                <a style="width:5%;height:50%" class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                <a style="width:2%" class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                     <span class="sr-only">Previous</span>
                 </a>
-                <a style="width:5%;height:50%" class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                <a style="width:2%" class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                     <span class="sr-only">Next</span>
                 </a>

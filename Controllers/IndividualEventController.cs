@@ -14,6 +14,7 @@ using NuGet.Protocol.Core.Types;
 using MeetGreet.AmazonS3HelperClasses;
 using System.Security.AccessControl;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Diagnostics;
 
 namespace MeetGreet.Controllers
 {
@@ -41,33 +42,40 @@ namespace MeetGreet.Controllers
         [HttpPost]
         public async Task<IActionResult> IndividualEventPage(int eventID)
         {
-            await connect.OpenAsync();
-            // Sends a request for all data related to event with the same ID
-            MySqlCommand command = new MySqlCommand("SELECT * FROM Event WHERE ID="+ eventID, connect);
-            //Create empty event model
-            Event userEvent = new Event();
-
-            // Reads result.
-            MySqlDataReader reader = command.ExecuteReader();
-            //The return values from the SQL are always in the same order so grabbing specific values just means grabbing a certain value
-            while (reader.Read())
+            Event? thisEvent = null;
+            foreach(var myEvent in _context.Events)
             {
-                userEvent.Id = Convert.ToInt32(reader.GetValue(0).ToString());
-                userEvent.Title = reader.GetValue(1).ToString();
-                userEvent.Description = reader.GetValue(4).ToString();
-                userEvent.ScheduledDateTime = DateTime.Parse(reader.GetValue(10).ToString());
-                userEvent.Address = reader.GetValue(9).ToString();
-                userEvent.City = reader.GetValue(8).ToString();
-                userEvent.ZipCode = reader.GetValue(7).ToString();
-                userEvent.GeoLocationLatitude = Convert.ToDouble(reader.GetValue(6).ToString());
-                userEvent.GeoLocationLongitude = Convert.ToDouble(reader.GetValue(5).ToString());
+                if(myEvent.Id == eventID)
+                {
+                    thisEvent = myEvent;
+                    break;
+                }
             }
-
-            reader.Close();
+            
             //pass the data as a ViewData object to the view
-            ViewData["Event"] = userEvent;
-            ViewData["ImageURL"] = getImageURL(userEvent.Id);
+            ViewData["Event"] = thisEvent;
+            ViewData["ImageURL"] = getImageURL(thisEvent.Id);
+
+            // Retrieves the ID of the current logged in user.
+            string? id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if(id == thisEvent.CreatedByUserId)
+            {
+                Debug.WriteLine("Is host!");
+                ViewData["IsHost"] = true;
+            }
             return View();
+        }
+
+        public async Task<IActionResult> SendEmailUpdate(int eventID, string emailHeader, string emailBody)
+        {
+            EmailClasses.EmailClass email = new EmailClasses.EmailClass();
+            string? emailSender = User.FindFirstValue(ClaimTypes.Name);
+            
+            if(emailSender != null)
+            {
+                email.SendMassEmail(emailSender, emailHeader, emailBody, eventID, _context);
+            }
+            return RedirectToAction("Index", "Home");
         }
 
         /*
@@ -76,7 +84,7 @@ namespace MeetGreet.Controllers
          * passed to the individual event page so that it can display the correct information
          */
         [HttpPost]
-        public async Task<IActionResult> SubmitToSQL(DateTime eventDate, string eventTitle, string eventDescription, string eventAddress, string eventCity, string eventZipCode, double eventLatitude, double eventLongitude, string imageByteString, string eventImageName)
+        public async Task<IActionResult> SubmitToSQL(DateTime eventDate, string eventTitle, string eventDescription, string eventAddress, string eventCity, string eventZipCode, double eventLatitude, double eventLongitude, string imageByteString, string eventImageName, int eventRadius)
         {
             //assign params to values in event model
             Event userEvent = new Event
@@ -88,7 +96,8 @@ namespace MeetGreet.Controllers
                 City = eventCity,
                 ZipCode = eventZipCode,
                 GeoLocationLatitude = eventLatitude,
-                GeoLocationLongitude = eventLongitude
+                GeoLocationLongitude = eventLongitude,
+                Radius = eventRadius
             };
             //pushing data to the SQL table
             string? id = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -117,21 +126,15 @@ namespace MeetGreet.Controllers
         }
 
         private string getImageURL(int eventID) {
-            if(connect.State != System.Data.ConnectionState.Open)
-            {
-                connect.Open();
-            }
-            MySqlCommand command = new MySqlCommand("SELECT * FROM Image WHERE EventId=" + eventID, connect);
 
-            // Reads result.
-            MySqlDataReader reader = command.ExecuteReader();
-            while (reader.Read())
+            foreach(var image in _context.Images)
             {
-                Console.WriteLine("READER: " + reader.GetValue(2));
-                string s3Key = reader.GetValue(2).ToString() ?? "";
-                return s3Helper.retrieveS3BucketImageURL(s3Key);
+                if(image.EventId == eventID)
+                {
+                    return s3Helper.retrieveS3BucketImageURL(image.S3key);
+                }
             }
-            reader.Close();
+
             return "";
         }
 

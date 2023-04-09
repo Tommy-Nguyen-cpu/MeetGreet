@@ -13,7 +13,10 @@
                     <h5 class="card-title">Event Name:@myEvent.Title</h5>
                     <h5>Number of Attendees: @Model.NumberOfAttendancePerEvents[myEvent.Id]</h5>
                     <p class="card-text">Location: @myEvent.Address, @myEvent.City, @myEvent.ZipCode <br />Geolocation: (@myEvent.GeoLocationLatitude, @myEvent.GeoLocationLongitude)<br />Description: @myEvent.Description</p>
-                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                    <form method="post" asp-controller="IndividualEvent" asp-action="IndividualEventPage">
+                        <input type="hidden" name="eventID" value="@myEvent.Id" />
+                        <input type="submit" class="btn btn-primary" style="background-color:mediumseagreen" value="Go To My Event Page" />
+                    </form>
                 </div>
             </div>
 
@@ -38,7 +41,10 @@
                 <div class="card-body">
                     <h5 class="card-title">Event Name:@myEvent.Title</h5>
                     <p class="card-text">Location: @myEvent.Address, @myEvent.City, @myEvent.ZipCode <br />Geolocation: (@myEvent.GeoLocationLatitude, @myEvent.GeoLocationLongitude)<br />Description: @myEvent.Description</p>
-                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                    <form method="post" asp-controller="IndividualEvent" asp-action="IndividualEventPage">
+                        <input type="hidden" name="eventID" value="@myEvent.Id" />
+                        <input type="submit" class="btn btn-primary" style="background-color:mediumseagreen" value="Go To My Event Page" />
+                    </form>
                 </div>
             </div>
 
