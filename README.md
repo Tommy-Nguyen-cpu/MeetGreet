@@ -2,7 +2,7 @@
 A website developed to connect students (with .EDU emails) to events within their general vicinity.
 
 # MeetGreet Local Infrastructure
-The code to run the MeetGreet infrastructure locally is in the MeetGreet Infrastructure branch.
+The code to run the MeetGreet infrastructure locally is in the branch titles "SQL-AWS Infrastructure".
 
 
 # Prerequisites
