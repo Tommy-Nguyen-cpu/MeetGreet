@@ -1,0 +1,3 @@
+[submodule "MeetGreet-Infrastructure"]
+	path = MeetGreet-Infrastructure
+	url = https://github.com/baffogatwit/MeetGreet-Infrastructure
